@@ -18,6 +18,16 @@ public class ResumeController : SingletonBase<ResumeController>
         m_GrabYMinPos = m_TableCollider.bounds.max.y + m_GrabResumeOffset;
     }
 
+    public bool SetCurrResumeFocused(Resume newResume)
+    {
+        if (m_CurrResumeFocused != null && !m_CurrResumeFocused.ZoomOut())
+            return false;
+
+        // succesffully changed
+        m_CurrResumeFocused = newResume;
+        return true;
+    }
+
     // Update is called once per frame
     void Update()
     {

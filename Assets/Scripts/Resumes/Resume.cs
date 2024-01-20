@@ -29,6 +29,9 @@ public class Resume : MonoBehaviour
     private float m_FlySpeed = 1.0f;
 
     [Header("Zoom state")]
+    public float m_MaxZoomSpeed = 5.0f;
+    public float m_ZoomRotationAngle = 720.0f;
+    [HideInInspector] private bool m_ZoomAnimationPlaying = false;
     private Vector3 m_BeforeZoomPos = Vector3.zero;
 
     private void Awake()
@@ -60,6 +63,7 @@ public class Resume : MonoBehaviour
 
         return deceleration;
     }
+    // Have decelaration, different from flying to position
     IEnumerator FlyTowardsTable()
     {
         m_rb.isKinematic = true;
@@ -93,27 +97,34 @@ public class Resume : MonoBehaviour
         m_IsClick = true;
 
         m_InitialZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
-        gameObject.transform.position = new Vector3(
-            gameObject.transform.position.x,
-            ResumeController.Instance.m_GrabYMinPos,
-            gameObject.transform.position.z
-            );
         m_PaperToMouseOffset = gameObject.transform.position - GetMouseAsWorldPoint();
     }
 
     void OnMouseDrag()
     {
+        // if there is a resume that is currently focused, ignore this
+        if (ResumeController.Instance.m_CurrResumeFocused != null)
+            return;
+
         if (m_IsClick && Time.time - m_InitialClickTime < m_ClickTimeThreshold)
             return;
 
         m_IsClick = false;
         m_PrevMousePos = Input.mousePosition;
         transform.position = GetMouseAsWorldPoint() + m_PaperToMouseOffset;
+        gameObject.transform.position = new Vector3(
+            gameObject.transform.position.x,
+            ResumeController.Instance.m_GrabYMinPos,
+            gameObject.transform.position.z
+        );
     }
     private void OnMouseUp()
     {
         if (m_IsClick)
         {
+            if (ResumeController.Instance.m_CurrResumeFocused == this)
+                return;
+
             ZoomUp();
             return;
         }
@@ -132,27 +143,73 @@ public class Resume : MonoBehaviour
 
     private void ZoomUp()
     {
+        //TODO:: This line allows switch, change to check if a resume is already focused if we do not want switch
+        // check if can change global state
+        if (!ResumeController.Instance.SetCurrResumeFocused(this))
+            return;
+
         //store old position
         m_rb.isKinematic = true;
 
         m_BeforeZoomPos = transform.position;
 
-        //change global state
-        ResumeController.Instance.m_CurrResumeFocused = this;
-
         // lerp to screen
-
-        // when finish lerp to screen set bool to true
-
-        //on update, if true and player clicks anywhere on the screen that is not on the object
+        StartCoroutine(ZoomInAnimation());
     }
 
     public bool ZoomOut()
     {
-        // TODO: if havent zoom finish yet, say we cannot zoom out
-        m_rb.isKinematic = false;
+        // if havent zoom finish yet, cannot zoom out
+        if (m_ZoomAnimationPlaying)
+            return false;
 
+        m_rb.isKinematic = false;
         transform.position = new Vector3(m_BeforeZoomPos.x, ResumeController.Instance.m_GrabYMinPos, m_BeforeZoomPos.z);
         return true;
+    }
+
+    IEnumerator ZoomInAnimation()
+    {
+        m_ZoomAnimationPlaying = true;
+
+        // Calculate the total distance to move
+        Vector3 targetPos = ResumeController.Instance.m_FinalZoomPos.position;
+        float totalDistance = Vector3.Distance(transform.position, targetPos);
+
+        float currRotationAngle = 0.0f;
+
+        // Move and rotate until reaching the target position
+        float distanceLeft = 0.0f;
+        Vector3 initialPos = transform.position;
+        float lerpTime = 0.0f;
+        while (lerpTime < 1.0f)
+        {
+            // Lerp to position
+            lerpTime += Time.deltaTime * m_MaxZoomSpeed;
+            transform.position = Vector3.Lerp(initialPos, targetPos, lerpTime);
+            distanceLeft = Vector3.Distance(transform.position, targetPos);
+
+            // Calculate the rotation for this frame
+            float newRotation = Mathf.Lerp(0.0f, m_ZoomRotationAngle, distanceLeft / totalDistance);
+            float rotationOffset = newRotation - currRotationAngle;
+            currRotationAngle = newRotation;
+
+            // Rotate the object
+            transform.Rotate(Vector3.up, rotationOffset);
+
+            // Check if we've completed angle to rotate
+            if (currRotationAngle >= m_ZoomRotationAngle)
+            {
+                transform.rotation = m_InitialRotation; // reset rotation to initial angle
+            }
+
+            yield return null;
+        }
+
+        // Reached destination
+        transform.rotation = m_InitialRotation;
+        transform.position = targetPos;
+
+        m_ZoomAnimationPlaying = false;
     }
 }

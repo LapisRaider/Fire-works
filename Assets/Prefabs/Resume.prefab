@@ -130,3 +130,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ClickTimeThreshold: 0.2
   m_MaxThrowVelocity: 30
+  m_MaxZoomSpeed: 1
+  m_ZoomRotationAngle: 360
