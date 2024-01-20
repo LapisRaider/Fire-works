@@ -72,7 +72,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -2
+  m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 1407537b0f38a9a48873e2399b6ee3c4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -407,6 +407,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1318381793918886095}
   - component: {fileID: 5047683098761293243}
+  - component: {fileID: 1310681564}
   m_Layer: 0
   m_Name: Tablet_Object
   m_TagString: Untagged
@@ -421,9 +422,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1318381793918886094}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2.0327, y: 0.24, z: 1}
-  m_LocalScale: {x: 1, y: 1, z: 0}
+  m_LocalScale: {x: 0.56150573, y: 0.56150573, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1318381793286656489}
@@ -444,6 +445,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tabletScreens: []
+  hoverY: 2.2
+  openPosition: {x: 4.3, y: 0.8, z: -1.3}
+--- !u!65 &1310681564
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1318381793918886094}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 11.680445, y: 7.4079313, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1318381793985930975
 GameObject:
   m_ObjectHideFlags: 0
