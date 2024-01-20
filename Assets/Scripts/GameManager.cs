@@ -15,11 +15,12 @@ public enum JOB_DEPARTMENT {
 
 public class GameManager : SingletonBase<GameManager>
 {
-    // In game timer for month
-    public const float MONTH_TIME = 1.0f;   // Time taken for a month, adjust this when balancing
-    public int currentMonth = 0;            // 0 is January, 11 is December
-    public float monthTime = MONTH_TIME;
-    public float monthTimer = 0;
+    public int[] departments = new int[(int)JOB_DEPARTMENT.TOTAL_DEPARTMENTS];
+
+    // In game timer for month  
+    public int currentMonth;    // 0 is January, 11 is December
+    public float monthTime;     // Time taken for a month
+    public float monthTimer;    // Time elapsed, updates per frame
 
     /// <summary>
     /// Observer pattern for New month type events
@@ -34,7 +35,22 @@ public class GameManager : SingletonBase<GameManager>
     // Start is called before the first frame update
     void Start()
     {
-        
+        InitValues();   
+    }
+
+    // Change values based on balancing
+    void InitValues() {
+        currentMonth = 0;
+        monthTime = 1.0f;
+        monthTimer = 0;
+
+        departments[(int)JOB_DEPARTMENT.HR] = 1;
+        departments[(int)JOB_DEPARTMENT.FINANCE] = 1;
+        departments[(int)JOB_DEPARTMENT.MARKETING] = 1;
+        departments[(int)JOB_DEPARTMENT.PRODUCTION] = 1;
+        departments[(int)JOB_DEPARTMENT.RESEARCH] = 1;
+        departments[(int)JOB_DEPARTMENT.QA] = 1;
+        departments[(int)JOB_DEPARTMENT.SECURITY] = 1;
     }
 
     // Update is called once per frame
@@ -42,8 +58,8 @@ public class GameManager : SingletonBase<GameManager>
     {
         // Month timer
         monthTimer += Time.deltaTime;
-        if (monthTimer >= MONTH_TIME) {
-            monthTimer -= MONTH_TIME;
+        if (monthTimer >= monthTime) {
+            monthTimer -= monthTime;
             onNewMonth();
         }
     }
