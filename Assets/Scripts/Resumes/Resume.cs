@@ -141,10 +141,9 @@ public class Resume : MonoBehaviour
         m_IsClick = true;
     }
 
-
-    //TODO: if currently zoomed in on a resume, cannot drag ard
     private void ZoomUp()
     {
+        //TODO:: This line allows switch, change to check if a resume is already focused if we do not want switch
         // check if can change global state
         if (!ResumeController.Instance.SetCurrResumeFocused(this))
             return;
