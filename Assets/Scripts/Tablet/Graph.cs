@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,15 +20,25 @@ public class Graph : MonoBehaviour
     [Tooltip("Max height of the points")]
     public float yMax = 75.0f;
 
+    [Tooltip("List of current active circles in graph")]
     List<GameObject> listOfCircles;
+    [Tooltip("List of lines active in the graph")]
+    List<GameObject> listOfLines;
+
+    [Tooltip("For initializing the graph with starting values")]
+    public List<int> initialList;
+
+    //public List<Vector2> circlePositions;
     
     void Awake()
     {
         graphContainer = GameObject.Find("GraphContainer").GetComponent<RectTransform>();
-
-        List<int> valList = new List<int>() { 10, 20, 40, 70, 50, 40, 10,};
-        ShowGraph(valList);
+        listOfCircles = new List<GameObject>();
+        listOfLines = new List<GameObject>();
+        //List<int> valList = new List<int>() { 10, 20, 40, 70, 50, 40, 10,};
+        //ShowGraph(valList);
         //CreateCircle(new Vector2(15, 25));
+        InitializeGraph(initialList);
     }
 
     GameObject CreateCircle(Vector2 anchoredPosition)
@@ -43,26 +55,124 @@ public class Graph : MonoBehaviour
         return circleObj;
     }
 
-    void ShowGraph(List<int> valueList)
+    /// <summary>
+    /// Only used if we want to initialize the graph with values. Mostly used for testing.
+    /// </summary>
+    /// <param name="list">Initial list of values</param>
+    void InitializeGraph(List<int> list)
     {
-        float graphHeight = graphContainer.sizeDelta.y;
-        GameObject previousCircle = null;
-        for (int i = 0; i < valueList.Count; ++i)
-        {
-            float xPosition = xScale + i * xScale;
-            float yPosition = (valueList[i] / yMax) * graphHeight;
-            GameObject newCircle = CreateCircle(new Vector2(xPosition, yPosition));
-            //if(listOfCircles.Count <= )
-            if (previousCircle != null)
+
+            for(int i = 0; i < list.Count; ++i)
             {
-                // Create a connection
-                CreateDotConnection(previousCircle.GetComponent<RectTransform>().anchoredPosition, newCircle.GetComponent<RectTransform>().anchoredPosition);
+                float graphHeight = graphContainer.sizeDelta.y;
+                
+
+                float xPosition = (xScale * 0.35f) + (i - 1) * xScale;
+                if (i == 0) // Just for first dot to have the effect of the graph line coming out of the side
+                {
+                    xPosition = 0;
+                }
+                float yPosition = (list[i] / yMax) * graphHeight;
+                GameObject newCircle = CreateCircle(new Vector2(xPosition, yPosition));
+                if(listOfCircles.Count < maxPoints)
+                {
+                    listOfCircles.Add(newCircle);
+                }
+                else
+                {
+                    // Always remove the first item in the list
+                    listOfCircles.RemoveAt(0);
+                    // Add a new circle
+                    listOfCircles.Add(newCircle);
+                }
             }
-            previousCircle = newCircle;
-        }
+
+            // Clear the lines
+            RefreshLines();
+            // Recreate
+            CreateLines();  
+
+            listOfCircles[0].GetComponent<Image>().enabled = false;
     }
 
-    void CreateDotConnection(Vector2 dotA, Vector2 dotB) 
+    void AddPointToGraph(int Point)
+    {
+        float graphHeight = graphContainer.sizeDelta.y;
+
+        float xPosition = 0;
+        float yPosition = 0;
+        if(listOfCircles.Count < maxPoints)
+        {
+            xPosition = xScale + listOfCircles.Count * xScale;
+            yPosition = (Point / yMax) * graphHeight;
+            GameObject newCircle = CreateCircle(new Vector2(xPosition, yPosition));
+            listOfCircles.Add(newCircle);
+        }
+        else
+        {
+            // Need to shift all the point's x position
+            for(int i = 0; i < listOfCircles.Count - 1; ++i)
+            {
+                RectTransform firstTransform = listOfCircles[i].GetComponent<RectTransform>();
+                RectTransform secondTransform = listOfCircles[i + 1].GetComponent<RectTransform>();
+                Debug.Log("First Pos: " + firstTransform.anchoredPosition);
+                Debug.Log("Second Pos: " + secondTransform.anchoredPosition);
+                Vector2 tempPos = firstTransform.anchoredPosition; // Store the first points transform
+                firstTransform.anchoredPosition = new Vector2(firstTransform.anchoredPosition.x, secondTransform.anchoredPosition.y);
+                secondTransform.anchoredPosition = new Vector2(secondTransform.anchoredPosition.x, tempPos.y);
+            }
+
+            Destroy(listOfCircles[listOfCircles.Count - 1]);
+            // Always remove the first item in the list
+            listOfCircles.RemoveAt(listOfCircles.Count - 1);
+
+            xPosition = xScale + (listOfCircles.Count - 1) * xScale;
+            yPosition = (Point / yMax) * graphHeight;
+            GameObject newCircle = CreateCircle(new Vector2(xPosition, yPosition));
+
+
+            // Add a new circle
+            listOfCircles.Add(newCircle);
+
+            listOfCircles[0].GetComponent<Image>().enabled = false;
+        }
+
+        // Honestly can probably find a way to add on lines without destroying and recreating them all
+        // But there isnt that many and time is short D;
+        // Clear the lines
+        RefreshLines();
+        // Recreate
+        CreateLines();
+    }
+
+    void CreateLines()
+    {
+            GameObject prevCircle = null;
+            // Loop through the list
+            for(int i = 0; i < listOfCircles.Count; ++i)
+            {
+                if (prevCircle != null)
+                {
+                        GameObject connectionObject = CreateDotConnection(prevCircle.GetComponent<RectTransform>().anchoredPosition, listOfCircles[i].GetComponent<RectTransform>().anchoredPosition);
+                        listOfLines.Add(connectionObject);
+                }
+
+                prevCircle = listOfCircles[i];
+            }
+    }
+
+    void RefreshLines()
+    {
+        // Destroy the line objects
+        for(int i = 0; i < listOfLines.Count; ++i)
+        {
+            Destroy(listOfLines[i]);
+        }
+        // Clear the list after destroying 
+        listOfLines.Clear();
+    }
+
+    GameObject CreateDotConnection(Vector2 dotA, Vector2 dotB) 
     {
         GameObject connectionObject = new GameObject("ConnectionObj", typeof(Image));
         connectionObject.transform.SetParent(graphContainer, false);
@@ -76,34 +186,10 @@ public class Graph : MonoBehaviour
         rectTransform.anchoredPosition = dotA + dir * distance * 0.5f;
         float angle = MathF.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         rectTransform.rotation = Quaternion.Euler(0f, 0f, angle);
-        // Vector3 temp = Vector3.Cross(new Vector2(0, 1), dir);
-        // Debug.Log(dir);
-        // if (temp.z > 0)
-        // {
-        //     angle = Mathf.Acos(Vector2.Dot(new Vector2(0, 1), dir));
-        // }
-        // else
-        // {
-        //     angle = Mathf.Acos(Vector2.Dot(dir, new Vector2(0, 1)));
 
-        // }
-        // rectTransform.localEulerAngles = new Vector3(0, 0, angle);
-        // Quaternion rotation = Quaternion.LookRotation(dir, new Vector3(0, 0, 1));
-        // rectTransform.rotation = rotation;
+        return connectionObject;
     }
 
-    // void CreateLineConnection(Vector2 dotA, Vector2 dotB)
-    // {
-    //         GameObject lineObj = new GameObject("LineObj", typeof(LineRenderer));
-    //         lineObj.transform.SetParent(graphContainer, false);
-
-    //         LineRenderer line = lineObj.GetComponent<LineRenderer>();
-    //         line.positionCount = 2; // Cause only two points
-    //         //Vector2[] positions = {dotA, dotB};
-    //         line.SetPosition(0, dotA);
-    //         line.SetPosition(1, dotB);
-    //         line.useWorldSpace = false;
-    // }
 
     // Start is called before the first frame update
     void Start()
@@ -115,5 +201,9 @@ public class Graph : MonoBehaviour
     void Update()
     {
         
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+                AddPointToGraph(50);
+        }
     }
 }
