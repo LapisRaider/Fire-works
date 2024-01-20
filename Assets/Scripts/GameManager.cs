@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public enum JOB_DEPARTMENT {
-    HR,
-    FINANCE,
-    MARKETING,
-    PRODUCTION,
-    RESEARCH,
-    QA,
-    SECURITY,
+    HR,         // Increase number of applicants
+    FINANCE,    // Decrease costs of product and hires
+    MARKETING,  // Generate demand every quarter
+    PRODUCTION, // Generate supply every quarter
+    RESEARCH,   // Increases breakthrough chance
+    QA,         // Increases price of product
+    SECURITY,   // Decreases chance of breach
     TOTAL_DEPARTMENTS,
 }
 
@@ -17,10 +17,11 @@ public class GameManager : SingletonBase<GameManager>
 {
     public int[] departments = new int[(int)JOB_DEPARTMENT.TOTAL_DEPARTMENTS];
 
-    // In game timer for month  
+    // In game timer for month and quarters of month 
     public int currentMonth;    // 0 is January, 11 is December
-    public float monthTime;     // Time taken for a month
-    public float monthTimer;    // Time elapsed, updates per frame
+    public int currentQuarter;  // 0 is first quarter of month, 3 is last
+    public float quarterMonthTime;  // Time taken for a quarter of a month
+    public float quarterMonthTimer; // Time elapsed, updates per frame
 
     /// <summary>
     /// Observer pattern for New month type events
@@ -28,9 +29,23 @@ public class GameManager : SingletonBase<GameManager>
     /// So that when theres a new month, myFunc is called
     /// </summary>
 
+    // Stock graph variables
+    public float currentMoney;
+    public float currentPrice;
+    public float currentCost;
+    public float currentSupply;
+    public float currentDemand;
+    
+    // Negative events
+    public float demandLossRate; // How much of demand is lost over time
+    public float resignationRate;
+
+    // Misc events variables
+    public float breakthroughChance;
+
     public delegate void OnNewMonth();
     
-    public static event OnNewMonth onNewMonth;
+    public static event OnNewMonth onNewMonth = null;
 
     // Start is called before the first frame update
     void Start()
@@ -38,31 +53,89 @@ public class GameManager : SingletonBase<GameManager>
         InitValues();   
     }
 
-    // Change values based on balancing
+    // TODO : Change values based on balancing
     void InitValues() {
         currentMonth = 0;
-        monthTime = 1.0f;
-        monthTimer = 0;
+        quarterMonthTime = 1.0f;
+        quarterMonthTimer = 0.0f;
 
         departments[(int)JOB_DEPARTMENT.HR] = 1;
         departments[(int)JOB_DEPARTMENT.FINANCE] = 1;
-        departments[(int)JOB_DEPARTMENT.MARKETING] = 1;
+        departments[(int)JOB_DEPARTMENT.MARKETING] = 0;
         departments[(int)JOB_DEPARTMENT.PRODUCTION] = 1;
-        departments[(int)JOB_DEPARTMENT.RESEARCH] = 1;
-        departments[(int)JOB_DEPARTMENT.QA] = 1;
-        departments[(int)JOB_DEPARTMENT.SECURITY] = 1;
+        departments[(int)JOB_DEPARTMENT.RESEARCH] = 0;
+        departments[(int)JOB_DEPARTMENT.QA] = 0;
+        departments[(int)JOB_DEPARTMENT.SECURITY] = 0;
+        
+        currentMoney = 1000;
 
         TabletManager.Instance.InitPieChart(departments);
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Month timer
-        monthTimer += Time.deltaTime;
-        if (monthTimer >= monthTime) {
-            monthTimer -= monthTime;
-            onNewMonth();
+        // Quarter-Month timer
+        quarterMonthTimer += Time.deltaTime;
+        if (quarterMonthTimer >= quarterMonthTime) {
+            quarterMonthTimer -= quarterMonthTime;
+            UpdateFinances();
+            currentQuarter++;
+
+
+            if (currentQuarter >= 4) {
+                currentQuarter = 0;
+                if (onNewMonth != null) { onNewMonth(); }
+            }
+
+            if (currentMonth >= 12) {
+                EndOfYearUpdate();
+            }
         }
+    }
+
+    void EndOfYearUpdate() {
+        // TODO: Transition to boss
+
+    }
+
+    public void Hire(int _hiringCost, JOB_DEPARTMENT _department) {
+        departments[(int)_department] += 1;
+        currentMoney -= _hiringCost;
+        TabletManager.Instance.UpdatePieChart((int)_department, departments[(int)_department]);
+    }
+
+    void UpdateFinances() {
+        float profit;
+
+        TabletManager.Instance.AddPointToGraph((int)currentMoney);
+
+
+
+        /////// Old calculations
+        // currentCost = 10 - Mathf.Clamp(Mathf.Log(departments[(int)JOB_DEPARTMENT.FINANCE], 1.4f), 0.0f, 10.0f);
+        // currentDemand = Mathf.Clamp(7 + Mathf.Log(departments[(int)JOB_DEPARTMENT.MARKETING], 1.1f), 0.0f, 1000.0f);
+        // currentSupply = Mathf.Clamp(5 + Mathf.Log(departments[(int)JOB_DEPARTMENT.PRODUCTION], 1.1f), 0.0f, 1000.0f);
+
+        // breakthroughChance = Mathf.Clamp(1 / (1 + Mathf.Pow(1.2f, 10 - departments[(int)JOB_DEPARTMENT.RESEARCH])), 0.0f, 1.0f);
+
+        // currentPrice = Mathf.Clamp(60 + Mathf.Log(departments[(int)JOB_DEPARTMENT.QA], 1.1f), 0.0f, 1000.0f);
+
+        // if (currentSupply > currentDemand) {
+        //     profit = currentDemand * (currentPrice - currentCost) - (currentSupply - currentDemand) * currentCost;
+        // } else {
+        //     profit = currentSupply * (currentPrice - currentCost);
+        // }
+        
+        // currentMoney += profit;
+    }
+
+    // Output a value given a num, and certain specifications
+    // _middleNum is the median of all possible _num
+    // _largetValue is the largest possible output
+    // _steepness is how steep the sigmoid curve is, more = steeper
+    float SigmoidValueFunc(float _middleNum, float _largestValue, float _steepness, float _num) {
+        return _largestValue / (1 + Mathf.Pow(_steepness, (_middleNum - _num)));
     }
 }
