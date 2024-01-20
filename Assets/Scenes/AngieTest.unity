@@ -739,6 +739,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Resume (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3835468501873740043, guid: c9d2b041ab4e6184093dfc9053550d2d, type: 3}
+      propertyPath: m_HireSpeedAnimation
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3835468501873740047, guid: c9d2b041ab4e6184093dfc9053550d2d, type: 3}
       propertyPath: m_RootOrder
       value: 5

@@ -348,6 +348,8 @@ MonoBehaviour:
   m_BinScaleSpeed: 0.5
   m_BinRotateSpeed: 60
   m_HireStamp: {fileID: 412739160168201617}
+  m_HireSpeedAcceleration: 50
+  m_HireAnimationDuration: 1
 --- !u!1 &4657948648701397173
 GameObject:
   m_ObjectHideFlags: 0

@@ -46,6 +46,8 @@ public class Resume : MonoBehaviour
 
     [Header("Hiring")]
     public HireStamp m_HireStamp;
+    public float m_HireSpeedAcceleration = 5.0f;
+    public float m_HireAnimationDuration = 3.0f;
 
     private void Awake()
     {
@@ -179,7 +181,7 @@ public class Resume : MonoBehaviour
 
     private void ZoomUp()
     {
-        if (m_ZoomAnimationPlaying)
+        if (m_ZoomAnimationPlaying || m_IsThrown)
             return;
 
         if (ResumeController.Instance.m_CurrResumeFocused == this)
@@ -202,7 +204,7 @@ public class Resume : MonoBehaviour
     public bool ZoomOut()
     {
         // if havent zoom finish yet, cannot zoom out
-        if (m_ZoomAnimationPlaying)
+        if (m_ZoomAnimationPlaying || m_IsThrown)
             return false;
 
         m_HireStamp.SetAllowHire(false);
@@ -315,7 +317,24 @@ public class Resume : MonoBehaviour
 
     public void Hired()
     {
-
+        StartCoroutine(HireAnimation());
     }
 
+    IEnumerator HireAnimation()
+    {
+        m_IsThrown = true;
+        ResumeController.Instance.m_CurrResumeFocused = null;
+
+        float elapsedTime = 0f;
+        float speed = 0.0f;
+        while (elapsedTime < m_HireAnimationDuration)
+        {
+            speed += m_HireSpeedAcceleration * Time.deltaTime;
+            transform.Translate(speed * Vector3.right * Time.deltaTime);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        gameObject.SetActive(false);
+    }
 }
