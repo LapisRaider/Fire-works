@@ -95,7 +95,7 @@ public class Graph : MonoBehaviour
             listOfCircles[0].GetComponent<Image>().enabled = false;
     }
 
-    void AddPointToGraph(int Point)
+    public void AddPointToGraph(int Point)
     {
         float graphHeight = graphContainer.sizeDelta.y;
 
