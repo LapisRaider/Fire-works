@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-class Candidate
+public class Candidate
 {
     public string Name;
     public string Description;

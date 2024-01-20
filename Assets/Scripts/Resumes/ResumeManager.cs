@@ -2,10 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class ResumeManager : SingletonBase<ResumeManager>
 {
-    private Vector3 m_MousePos = Vector3.zero;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -17,5 +15,4 @@ public class PlayerController : MonoBehaviour
     {
         
     }
-
 }
