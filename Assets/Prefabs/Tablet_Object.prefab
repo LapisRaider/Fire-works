@@ -408,7 +408,7 @@ Transform:
   m_GameObject: {fileID: 1318381793918886094}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2.0327, y: 0.24, z: 1}
-  m_LocalScale: {x: 1.4, y: 1.4, z: 0}
+  m_LocalScale: {x: 0.54203796, y: 0.54203796, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2062012902585866399}
@@ -441,10 +441,10 @@ MonoBehaviour:
   - {fileID: 8273724176348545572}
   screenObjects:
   - uiObjects:
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
+    - {fileID: 2886758887417418250}
+    - {fileID: 8089192790630016917}
+    - {fileID: 7253347082951357105}
+    - {fileID: 8273724176348545572}
   - uiObjects:
     - {fileID: 1987232856877937055}
     - {fileID: 1318381795331026445}
@@ -453,7 +453,6 @@ MonoBehaviour:
   tabletImage: {fileID: 1318381793286656488}
   tabletBG: {fileID: 5186487356575790487}
   openPosition: {x: 4.3, y: 0.8, z: -1.3}
-  buttonOriginalTransforms: []
 --- !u!65 &1310681564
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1265,17 +1264,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1987232856877937055}
-  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1318381794986189824}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -64.3, y: 65.4}
+  m_AnchoredPosition: {x: -64.3, y: 71.3}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5255535105802732702
@@ -1306,7 +1305,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 7482667652216324306, guid: 5035863bd02ffd8439fb7157e3979099, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3b7b46dfa15b3c7479c00b3af676f00e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2045,7 +2044,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &8950453552601362127
 RectTransform:
   m_ObjectHideFlags: 0
