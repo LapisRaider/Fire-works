@@ -177,9 +177,10 @@ public class Graph : MonoBehaviour
     GameObject CreateDotConnection(Vector2 dotA, Vector2 dotB) 
     {
         GameObject connectionObject = new GameObject("ConnectionObj", typeof(Image));
-        connectionObject.transform.SetParent(graphContainer, false);
         connectionObject.GetComponent<Image>().color = new Color(1, 1, 1, 0.5f);
         RectTransform rectTransform = connectionObject.GetComponent<RectTransform>();
+        //rectTransform.localRotation = Quaternion.Euler(new Vector3(0f, 0f, 0f));
+        //rectTransform.rotation = Quaternion.Euler(90f, 0f, 0f);
         Vector2 dir = (dotB - dotA).normalized;
         float distance = Vector2.Distance(dotA, dotB);
         rectTransform.anchorMin = new Vector2(0, 0);
@@ -188,6 +189,7 @@ public class Graph : MonoBehaviour
         rectTransform.anchoredPosition = dotA + dir * distance * 0.5f;
         float angle = MathF.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         rectTransform.rotation = Quaternion.Euler(0f, 0f, angle);
+        connectionObject.transform.SetParent(graphContainer, false);
 
         return connectionObject;
     }
