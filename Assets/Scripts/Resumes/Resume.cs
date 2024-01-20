@@ -164,8 +164,6 @@ public class Resume : MonoBehaviour
         Vector3 dir = vel.normalized;
         float magnitude = Mathf.Min(Vector3.Magnitude(vel), m_MaxThrowVelocity);
 
-        Debug.Log(magnitude);
-
         if (m_HoveringOverBin && magnitude < m_TrashThrowTreshold)
         {
             ThrowAway();

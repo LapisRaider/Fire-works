@@ -10,6 +10,9 @@ public class Candidate
     public string Description;
     public JOB_DEPARTMENT m_Department;
 
+    public bool m_HaveCloth;
+    public int m_AnimalPhotoIndex;
+
     public static Dictionary<JOB_DEPARTMENT, string> DEPARTMENT_TEXT = new Dictionary<JOB_DEPARTMENT, string>()
     {
         { JOB_DEPARTMENT.HR, "Hr" },

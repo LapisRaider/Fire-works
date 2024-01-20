@@ -58,6 +58,8 @@ public class ResumeManager : SingletonBase<ResumeManager>
         //TODO: generate data
         Candidate candidate = new Candidate();
         candidate.m_Department = (JOB_DEPARTMENT)Random.Range((int)JOB_DEPARTMENT.HR, (int)JOB_DEPARTMENT.TOTAL_DEPARTMENTS);
+        candidate.m_AnimalPhotoIndex = Random.Range(0, 7);
+        candidate.m_HaveCloth = Random.Range(0, 2) == 0;
 
         return candidate;
     }
@@ -124,6 +126,7 @@ public class ResumeManager : SingletonBase<ResumeManager>
             m_SpawnBounds.bounds.center.y, 
             m_SpawnBounds.bounds.min.z + m_ResumeSize.z * 0.5f);
         m_ResumeSpawnPositions.Add(m_InitialSpawnPos);
+        SpawnBatch(5);
     }
 
     int CalculateNumberToSpawn(int _num) {
