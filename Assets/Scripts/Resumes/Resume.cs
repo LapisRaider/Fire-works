@@ -23,6 +23,7 @@ public class Resume : MonoBehaviour
     private void Start()
     {
         m_rb = GetComponent<Rigidbody>();
+        Debug.Log("Heere");
     }
 
     void OnMouseDown()
