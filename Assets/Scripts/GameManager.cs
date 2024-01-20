@@ -51,6 +51,8 @@ public class GameManager : SingletonBase<GameManager>
         departments[(int)JOB_DEPARTMENT.RESEARCH] = 1;
         departments[(int)JOB_DEPARTMENT.QA] = 1;
         departments[(int)JOB_DEPARTMENT.SECURITY] = 1;
+
+        TabletManager.Instance.InitPieChart(departments);
     }
 
     // Update is called once per frame
