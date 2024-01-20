@@ -7,7 +7,9 @@ using UnityEngine;
 public class Resume : MonoBehaviour
 {
     [Header("Data")]
+    public ResumeUI m_ResumeUI;
     Candidate m_Data;
+
 
     [Header("Clicking")]
     public float m_ClickTimeThreshold = 0.2f;
@@ -51,6 +53,7 @@ public class Resume : MonoBehaviour
     public void Initialize(Candidate data, Vector3 spawnPos, Vector3 landPos, float flySpeed)
     {
         m_Data = data;
+        m_ResumeUI.Initialize(m_Data);
 
         m_FlySpeed = flySpeed;
 

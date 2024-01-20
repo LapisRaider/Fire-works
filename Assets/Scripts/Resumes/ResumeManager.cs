@@ -56,7 +56,10 @@ public class ResumeManager : SingletonBase<ResumeManager>
     Candidate GenerateCandidateData()
     {
         //TODO: generate data
-        return null;
+        Candidate candidate = new Candidate();
+        candidate.m_Department = (JOB_DEPARTMENT)Random.Range((int)JOB_DEPARTMENT.HR, (int)JOB_DEPARTMENT.TOTAL_DEPARTMENTS);
+
+        return candidate;
     }
 
     public void SpawnBatch(int batchAmt)
