@@ -42,7 +42,7 @@ public class ResumeController : SingletonBase<ResumeController>
             if (!Physics.Raycast(ray, out hit, 300.0f))
                 return;
 
-            if (hit.transform != m_CurrResumeFocused.transform)
+            if (hit.transform != m_CurrResumeFocused.transform && hit.transform.tag != "HireButton")
             {
                 // if able to zoom out successfully
                 if (m_CurrResumeFocused.ZoomOut())

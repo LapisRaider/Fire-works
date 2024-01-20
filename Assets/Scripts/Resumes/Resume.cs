@@ -44,6 +44,9 @@ public class Resume : MonoBehaviour
     private bool m_HoveringOverBin = false;
     private bool m_IsThrown = false;
 
+    [Header("Hiring")]
+    public HireStamp m_HireStamp;
+
     private void Awake()
     {
         m_rb = GetComponent<Rigidbody>();
@@ -66,6 +69,7 @@ public class Resume : MonoBehaviour
         m_HoveringOverBin = false;
         m_ZoomAnimationPlaying = false;
         m_IsThrown = false;
+        m_HireStamp.ResetStamp();
 
         // lerp to position
         m_TablePos = landPos;
@@ -148,9 +152,6 @@ public class Resume : MonoBehaviour
 
         if (m_IsClick)
         {
-            if (ResumeController.Instance.m_CurrResumeFocused == this)
-                return;
-
             ZoomUp();
             return;
         }
@@ -178,6 +179,12 @@ public class Resume : MonoBehaviour
 
     private void ZoomUp()
     {
+        if (m_ZoomAnimationPlaying)
+            return;
+
+        if (ResumeController.Instance.m_CurrResumeFocused == this)
+            return;
+
         //TODO:: This line allows switch, change to check if a resume is already focused if we do not want switch
         // check if can change global state
         if (!ResumeController.Instance.SetCurrResumeFocused(this))
@@ -198,12 +205,13 @@ public class Resume : MonoBehaviour
         if (m_ZoomAnimationPlaying)
             return false;
 
+        m_HireStamp.SetAllowHire(false);
         m_rb.isKinematic = false;
-        StartCoroutine(ZoomInAnimation(new Vector3(m_BeforeZoomPos.x, ResumeController.Instance.m_GrabYMinPos, m_BeforeZoomPos.z)));
+        StartCoroutine(ZoomInAnimation(new Vector3(m_BeforeZoomPos.x, ResumeController.Instance.m_GrabYMinPos, m_BeforeZoomPos.z), false));
         return true;
     }
 
-    IEnumerator ZoomInAnimation(Vector3 targetPos)
+    IEnumerator ZoomInAnimation(Vector3 targetPos, bool isZoomIn = true)
     {
         m_ZoomAnimationPlaying = true;
 
@@ -229,7 +237,8 @@ public class Resume : MonoBehaviour
             currRotationAngle = newRotation;
 
             // Rotate the object
-            transform.Rotate(Vector3.up, rotationOffset);
+            transform.rotation *= Quaternion.Euler(0.0f, rotationOffset, 0f);
+
 
             // Check if we've completed angle to rotate
             if (currRotationAngle >= m_ZoomRotationAngle)
@@ -245,6 +254,8 @@ public class Resume : MonoBehaviour
         transform.position = targetPos;
 
         m_ZoomAnimationPlaying = false;
+
+        m_HireStamp.SetAllowHire(isZoomIn);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -300,6 +311,11 @@ public class Resume : MonoBehaviour
         }
 
         gameObject.SetActive(false);
+    }
+
+    public void Hired()
+    {
+
     }
 
 }
