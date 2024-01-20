@@ -1,69 +1,69 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class Resume : MonoBehaviour, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class Resume : MonoBehaviour
 {
     // should have data here
     Rigidbody m_rb;
 
-    Vector3 m_PrevPos = Vector3.zero;
     float m_GrabYMinPos = 20.0f;
     Vector3 m_MovementOffset = Vector3.zero;
+
+    public float m_ClickTimeThreshold = 0.2f;
+    private float m_InitialClickTime = 0.0f;
+    private bool m_IsClick = true;
+
+    private Vector3 m_PaperToMouseOffset;
+    private float m_InitialZCoord;
+    private Vector3 m_PrevMousePos = Vector3.zero;
+
 
     private void Start()
     {
         m_rb = GetComponent<Rigidbody>();
     }
 
-    public void Initialize(Vector3 pos, Candidate data)
+    void OnMouseDown()
     {
-        // reset sizes and positions here
-        m_PrevPos = transform.position;
+        m_InitialClickTime = Time.time;
+
+        m_InitialZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
+        m_PaperToMouseOffset = gameObject.transform.position - GetMouseAsWorldPoint();
     }
 
-    public void OnPointerClick(PointerEventData pointerEventData)
+    private Vector3 GetMouseAsWorldPoint()
     {
-        Debug.Log(name + " Game Object Clicked!");
-        //open the thing up
+        Vector3 mousePoint = Input.mousePosition;
+        mousePoint.z = m_InitialZCoord;
+
+        return Camera.main.ScreenToWorldPoint(mousePoint);
     }
 
-    public void OnMouseDown()
+    void OnMouseDrag()
     {
-        Debug.Log(name + " on mouse down");
-        m_MovementOffset = transform.position - GetMouseWorldPosition(Input.mousePosition);
+        if (m_IsClick && Time.time - m_InitialClickTime < m_ClickTimeThreshold)
+            return;
+
+        m_IsClick = false;
+        m_PrevMousePos = Input.mousePosition;
+        transform.position = GetMouseAsWorldPoint() + m_PaperToMouseOffset;
     }
-
-    public void OnBeginDrag(PointerEventData eventData)
+    private void OnMouseUp()
     {
-        Debug.Log(name + " begin drag");
-        m_rb.isKinematic = true;
-    }
+        if (m_IsClick)
+        {
+            // click behavior
+            Debug.Log("Clicked");
+            return;
+        }
 
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        Debug.Log(name + " end drag");
-        m_rb.isKinematic = false;
-    }
+        // toss object
+        Vector3 vel = Input.mousePosition - m_PrevMousePos;
+        m_rb.AddForce(new Vector3(vel.x, 0.0f, vel.y), ForceMode.Impulse);
 
-    public void OnDrag(PointerEventData eventData)
-    {
-        Vector3 mouseWorldPos = GetMouseWorldPosition(eventData.position);
-
-        Debug.Log(mouseWorldPos + " on drag");
-        Debug.Log(m_MovementOffset + " offset");
-        transform.position = new Vector3(mouseWorldPos.x, m_GrabYMinPos, mouseWorldPos.y) + m_MovementOffset;
-    }
-
-    private Vector3 GetMouseWorldPosition(Vector2 screenPosition)
-    {
-        Vector3 mousePos = screenPosition;
-        mousePos.z = Camera.main.nearClipPlane;
-
-        Vector3 newPos = Camera.main.ScreenToWorldPoint(mousePos);
-
-        return Camera.main.ScreenToWorldPoint(mousePos);
+        // reset 
+        m_IsClick = true;
     }
 }
