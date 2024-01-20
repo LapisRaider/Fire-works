@@ -22,6 +22,7 @@ public class Resume : MonoBehaviour
     public float m_MaxThrowVelocity = 30.0f;
     private Rigidbody m_rb;
     private Quaternion m_InitialRotation = Quaternion.identity;
+    private Vector3 m_InitialScale = Vector3.one;
 
     // flying to table
     private Vector3 m_FlyDir = Vector3.zero;
@@ -34,10 +35,18 @@ public class Resume : MonoBehaviour
     [HideInInspector] private bool m_ZoomAnimationPlaying = false;
     private Vector3 m_BeforeZoomPos = Vector3.zero;
 
+    [Header("Trash bin")]
+    public float m_TrashThrowTreshold = 0.5f;
+    public float m_BinScaleSpeed = 2.0f;
+    public float m_BinRotateSpeed = 20.0f;
+    private bool m_HoveringOverBin = false;
+    private bool m_IsThrown = false;
+
     private void Awake()
     {
         m_rb = GetComponent<Rigidbody>();
         m_InitialRotation = transform.rotation;
+        m_InitialScale = transform.localScale;
     }
     public void Initialize(Candidate data, Vector3 spawnPos, Vector3 landPos, float flySpeed)
     {
@@ -45,10 +54,17 @@ public class Resume : MonoBehaviour
 
         m_FlySpeed = flySpeed;
 
-        // need to lerp to a position
+        // reset position
         transform.position = spawnPos;
         transform.rotation = m_InitialRotation;
+        transform.localScale = m_InitialScale;
 
+        // reset variables
+        m_HoveringOverBin = false;
+        m_ZoomAnimationPlaying = false;
+        m_IsThrown = false;
+
+        // lerp to position
         m_TablePos = landPos;
         m_FlyDir = (landPos - spawnPos).normalized;
         StartCoroutine(FlyTowardsTable());
@@ -102,6 +118,9 @@ public class Resume : MonoBehaviour
 
     void OnMouseDrag()
     {
+        if (m_IsThrown)
+            return;
+
         // if there is a resume that is currently focused, ignore this
         if (ResumeController.Instance.m_CurrResumeFocused != null)
             return;
@@ -110,6 +129,7 @@ public class Resume : MonoBehaviour
             return;
 
         m_IsClick = false;
+        transform.rotation = m_InitialRotation;
         m_PrevMousePos = Input.mousePosition;
         transform.position = GetMouseAsWorldPoint() + m_PaperToMouseOffset;
         gameObject.transform.position = new Vector3(
@@ -120,6 +140,9 @@ public class Resume : MonoBehaviour
     }
     private void OnMouseUp()
     {
+        if (m_IsThrown)
+            return;
+
         if (m_IsClick)
         {
             if (ResumeController.Instance.m_CurrResumeFocused == this)
@@ -133,8 +156,17 @@ public class Resume : MonoBehaviour
         Vector3 vel = Input.mousePosition - m_PrevMousePos;
         vel = new Vector3(vel.x, 0.0f, vel.y);
         Vector3 dir = vel.normalized;
-        float magnitude = Mathf.Max(Vector3.Magnitude(vel), m_MaxThrowVelocity);
+        float magnitude = Mathf.Min(Vector3.Magnitude(vel), m_MaxThrowVelocity);
 
+        Debug.Log(magnitude);
+
+        if (m_HoveringOverBin && magnitude < m_TrashThrowTreshold)
+        {
+            ThrowAway();
+            return;
+        }
+
+        // toss object if a lot of force is used
         m_rb.AddForce(magnitude * dir, ForceMode.Impulse);
 
         // reset 
@@ -212,4 +244,60 @@ public class Resume : MonoBehaviour
 
         m_ZoomAnimationPlaying = false;
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.transform.tag == "Bin")
+        {
+            m_HoveringOverBin = true;
+        }
+        else if (other.transform.tag == "FallBin")
+        {
+            ThrowAway();
+        }
+        else if (other.transform.tag == "Floor")
+        {
+            ThrowAway(false);
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.transform.tag == "Bin")
+        {
+            m_HoveringOverBin = false;
+        }
+    }
+
+    private void ThrowAway(bool isThrownIntoTrash = true)
+    {
+        m_IsThrown = true;
+        StartCoroutine(ThrowAwayAnimation(isThrownIntoTrash));
+    }
+
+    IEnumerator ThrowAwayAnimation(bool isThrownIntoTrash = true)
+    {
+        float lerpTime = 0.0f;
+        Vector3 initialPos = new Vector3(transform.position.x, 0.0f, transform.position.z);
+        Vector3 trashBinLocation = new Vector3(ResumeController.Instance.m_TrashBinPos.position.x, 0.0f, ResumeController.Instance.m_TrashBinPos.position.z);
+        while (lerpTime < 1.0f)
+        {
+            // Lerp to scale
+            lerpTime += Time.deltaTime * m_BinScaleSpeed;
+            transform.localScale = Vector3.Lerp(m_InitialScale, Vector3.zero, lerpTime);
+
+            if (isThrownIntoTrash)
+            {
+                Vector3 lerpPos = Vector3.Lerp(initialPos, trashBinLocation, lerpTime);
+                transform.position = new Vector3(lerpPos.x, transform.position.y, lerpPos.z);
+            }
+
+            // Rotate the object
+            transform.Rotate(Vector3.right, m_BinRotateSpeed * Time.deltaTime);
+
+            yield return null;
+        }
+
+        gameObject.SetActive(false);
+    }
+
 }
