@@ -13,7 +13,7 @@ public class PieChart : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SetValues(values);
+       // SetValues(values);
     }
 
     // Update is called once per frame
@@ -36,7 +36,17 @@ public class PieChart : MonoBehaviour
         SetValues(values);
     }
 
-    private void SetValues(float[] values)
+    public void InitValues(int[] val)
+    {
+        for(int i = 0; i < values.Length; ++i)
+        {
+            values[i] = val[i];
+        }
+
+        SetValues(values);
+    }
+
+    public void SetValues(float[] values)
     {
         float totalValues = 0;
         for(int i = 0; i < pieChartImages.Length; ++i)

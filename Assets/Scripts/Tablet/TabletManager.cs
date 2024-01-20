@@ -49,11 +49,6 @@ public class TabletManager : SingletonBase<TabletManager>
         }
     }
 
-    //public void ToggleScreen(int index)
-    //{
-
-    //}
-
     public void OnMouseEnter()
     {
         //Debug.Log("HOVERING OVER TABLET");
@@ -81,6 +76,11 @@ public class TabletManager : SingletonBase<TabletManager>
     public void UpdatePieChart(int index, float val)
     {
         pieChartRef.SetValues(index, val);
+    }
+
+    public void InitPieChart(int[] val)
+    {
+        pieChartRef.InitValues(val);
     }
 
     IEnumerator LerpPosition(Vector3 targetPosition, float duration)
