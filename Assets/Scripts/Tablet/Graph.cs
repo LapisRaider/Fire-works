@@ -67,7 +67,7 @@ public class Graph : MonoBehaviour
                 float graphHeight = graphContainer.sizeDelta.y;
                 
 
-                float xPosition = (xScale * 0.35f) + (i - 1) * xScale;
+                float xPosition = (xScale * 0.5f) + (i - 1) * xScale;
                 if (i == 0) // Just for first dot to have the effect of the graph line coming out of the side
                 {
                     xPosition = 0;
@@ -122,13 +122,15 @@ public class Graph : MonoBehaviour
                 secondTransform.anchoredPosition = new Vector2(secondTransform.anchoredPosition.x, tempPos.y);
             }
 
+            xPosition = listOfCircles[listOfCircles.Count - 1].GetComponent<RectTransform>().anchoredPosition.x;
+            yPosition = (Point / yMax) * graphHeight;
+            GameObject newCircle = CreateCircle(new Vector2(xPosition, yPosition));
+
             Destroy(listOfCircles[listOfCircles.Count - 1]);
             // Always remove the first item in the list
             listOfCircles.RemoveAt(listOfCircles.Count - 1);
 
-            xPosition = xScale + (listOfCircles.Count - 1) * xScale;
-            yPosition = (Point / yMax) * graphHeight;
-            GameObject newCircle = CreateCircle(new Vector2(xPosition, yPosition));
+
 
 
             // Add a new circle
