@@ -186,7 +186,7 @@ public class Resume : MonoBehaviour
         m_BeforeZoomPos = transform.position;
 
         // lerp to screen
-        StartCoroutine(ZoomInAnimation());
+        StartCoroutine(ZoomInAnimation(ResumeController.Instance.m_FinalZoomPos.position));
     }
 
     public bool ZoomOut()
@@ -196,16 +196,15 @@ public class Resume : MonoBehaviour
             return false;
 
         m_rb.isKinematic = false;
-        transform.position = new Vector3(m_BeforeZoomPos.x, ResumeController.Instance.m_GrabYMinPos, m_BeforeZoomPos.z);
+        StartCoroutine(ZoomInAnimation(new Vector3(m_BeforeZoomPos.x, ResumeController.Instance.m_GrabYMinPos, m_BeforeZoomPos.z)));
         return true;
     }
 
-    IEnumerator ZoomInAnimation()
+    IEnumerator ZoomInAnimation(Vector3 targetPos)
     {
         m_ZoomAnimationPlaying = true;
 
         // Calculate the total distance to move
-        Vector3 targetPos = ResumeController.Instance.m_FinalZoomPos.position;
         float totalDistance = Vector3.Distance(transform.position, targetPos);
 
         float currRotationAngle = 0.0f;
