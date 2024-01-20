@@ -7,6 +7,8 @@ TagManager:
   - Bin
   - FallBin
   - Floor
+  - Resume
+  - HireButton
   layers:
   - Default
   - TransparentFX
