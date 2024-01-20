@@ -110,7 +110,7 @@ public class ResumeManager : SingletonBase<ResumeManager>
         int numToSpawn = CalculateNumberToSpawn(GameManager.Instance.departments[(int)JOB_DEPARTMENT.HR]);
         SpawnBatch(numToSpawn);
     }
-    public int TEST_SPAWN_NO = 5;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -121,8 +121,6 @@ public class ResumeManager : SingletonBase<ResumeManager>
             m_SpawnBounds.bounds.center.y, 
             m_SpawnBounds.bounds.min.z + m_ResumeSize.z * 0.5f);
         m_ResumeSpawnPositions.Add(m_InitialSpawnPos);
-
-        SpawnBatch(TEST_SPAWN_NO);
     }
 
     int CalculateNumberToSpawn(int _num) {
