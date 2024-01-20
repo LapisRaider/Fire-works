@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ResumeManager : SingletonBase<ResumeManager>
@@ -7,15 +9,19 @@ public class ResumeManager : SingletonBase<ResumeManager>
     [Header("Resumes")]
     public GameObject m_ResumePrefab;
     public int m_ResumeObjPoolerSpawnCount = 10;
-    public Bounds m_AreaResumesWillFlyTo;
-    public Vector3 m_SpawnPos;
+
+    [Header("Spawning")]
+    public Collider m_TableSpawnBounds;
+    public Collider m_SpawnBounds;
+    public Vector2 m_MinMaxFlySpeed = new Vector2(3.0f, 7.0f);
+    private Vector3 m_InitialSpawnPos;
+
+    private Vector3 m_ResumeSize; 
+    private List<Vector3> m_ResumeSpawnPositions = new List<Vector3>();
+    private List<Resume> m_Resumes = new List<Resume>();
 
 
-    private List<Vector3> m_ResumeSpawnPositions;
-    private List<Resume> m_Resumes;
-    
-
-
+    [Header("Spawn math")]
     // Average number of applicants in a batch
     public int average;
 
@@ -27,7 +33,7 @@ public class ResumeManager : SingletonBase<ResumeManager>
     {
         for (int i = 0; i < spawnNo; ++i)
         {
-            GameObject resumeObj = Instantiate(m_ResumePrefab);
+            GameObject resumeObj = Instantiate(m_ResumePrefab, m_ResumePrefab.transform.position, m_ResumePrefab.transform.rotation);
             resumeObj.SetActive(false);
             resumeObj.transform.SetParent(transform, false);
             m_Resumes.Add(resumeObj.GetComponent<Resume>());
@@ -53,12 +59,43 @@ public class ResumeManager : SingletonBase<ResumeManager>
         return null;
     }
 
-    void CreateResume()
+    public void SpawnBatch(int batchAmt)
     {
-        Resume resume = GetInActiveResume();
+        // cache new spawn positions so it does not have to be recalculated
+        if (m_ResumeSpawnPositions.Count < batchAmt)
+        {
+            int spawnPosToBeAdded = batchAmt - m_ResumeSpawnPositions.Count;
+            for (int i = 0; i < spawnPosToBeAdded; ++i)
+            {
+                Vector3 lastPos = m_ResumeSpawnPositions.Last();
+                Vector3 newSpawnPos = Vector3.zero;
+                if (m_SpawnBounds.bounds.max.x < lastPos.x + m_ResumeSize.x * 1.5)
+                {
+                    newSpawnPos = new Vector3(m_InitialSpawnPos.x, lastPos.y, lastPos.z + m_ResumeSize.z);
+                }
+                else
+                {
+                    newSpawnPos = lastPos + new Vector3(m_ResumeSize.x, 0, 0);
+                }
 
-        //TODO: generate data
-        resume.gameObject.SetActive(true);
+                m_ResumeSpawnPositions.Add(newSpawnPos);
+            }
+        }
+
+        for (int i = 0; i < batchAmt; ++i)
+        {
+            Resume resume = GetInActiveResume();
+            Vector3 landPos = new Vector3(
+                m_ResumeSpawnPositions[i].x + Random.Range(-m_ResumeSize.x, m_ResumeSize.x),
+                m_TableSpawnBounds.bounds.center.y,
+                Random.Range(m_TableSpawnBounds.bounds.min.z, m_TableSpawnBounds.bounds.max.z)
+                );
+
+            // randomize speed
+            float randomSpeed = Random.Range(m_MinMaxFlySpeed.x, m_MinMaxFlySpeed.y);
+            resume.gameObject.SetActive(true);
+            resume.Initialize(GenerateCandidateData(), m_ResumeSpawnPositions[i], landPos, randomSpeed);
+        }
     }
 
     void NewBatch() {
@@ -71,19 +108,21 @@ public class ResumeManager : SingletonBase<ResumeManager>
         }
 
         int numToSpawn = CalculateNumberToSpawn(GameManager.Instance.departments[(int)JOB_DEPARTMENT.HR]);
-        // TODO : spawn batch of X resumes
-        Debug.Log(numToSpawn);
+        SpawnBatch(numToSpawn);
     }
-
+    public int TEST_SPAWN_NO = 5;
     // Start is called before the first frame update
     void Start()
     {
         GameManager.onNewMonth += NewBatch;
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
+        m_ResumeSize = m_ResumePrefab.GetComponent<Renderer>().bounds.size;
+        m_InitialSpawnPos = new Vector3(m_SpawnBounds.bounds.min.x + m_ResumeSize.x * 0.5f, 
+            m_SpawnBounds.bounds.center.y, 
+            m_SpawnBounds.bounds.min.z + m_ResumeSize.z * 0.5f);
+        m_ResumeSpawnPositions.Add(m_InitialSpawnPos);
+
+        SpawnBatch(TEST_SPAWN_NO);
     }
 
     int CalculateNumberToSpawn(int _num) {

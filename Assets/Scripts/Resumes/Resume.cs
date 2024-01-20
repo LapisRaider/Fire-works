@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Resume : MonoBehaviour
@@ -17,21 +18,64 @@ public class Resume : MonoBehaviour
     private float m_InitialZCoord;
     private Vector3 m_PrevMousePos = Vector3.zero;
 
+    private float m_GrabYMinPos = 20.0f;
+
     [Header("Physics")]
     public float m_MaxThrowVelocity = 30.0f;
     private Rigidbody m_rb;
-    private float m_GrabYMinPos = 20.0f;
+    private Quaternion m_InitialRotation = Quaternion.identity;
 
+    // flying to table
+    private Vector3 m_FlyDir = Vector3.zero;
+    private Vector3 m_TablePos = Vector3.zero;
+    private float m_FlySpeed = 1.0f;
 
-    private void Start()
+    private void Awake()
     {
         m_rb = GetComponent<Rigidbody>();
-        Debug.Log("Heere");
+        m_InitialRotation = transform.rotation;
     }
-    public void Initialize(Candidate data, Vector3 spawnPos, Vector3 landPos)
+    public void Initialize(Candidate data, Vector3 spawnPos, Vector3 landPos, float flySpeed)
     {
-        // need to lerp to a position
+        m_Data = data;
 
+        m_FlySpeed = flySpeed;
+
+        // need to lerp to a position
+        transform.position = spawnPos;
+        transform.rotation = m_InitialRotation;
+
+        m_TablePos = landPos;
+        m_FlyDir = (landPos - spawnPos).normalized;
+        StartCoroutine(FlyTowardsTable());
+    }
+    float CalculateDecleration(float initialVelocity, Vector3 finalPosition, Vector3 initialPosition)
+    {
+        float finalVelocity = 0.0f; // Final velocity is 0, as you want to come to a stop
+        float distance = Vector3.Distance(finalPosition, initialPosition);
+
+        // Calculate deceleration using the formula
+        float deceleration = (finalVelocity * finalVelocity - initialVelocity * initialVelocity) / (2 * distance);
+
+        return deceleration;
+    }
+    IEnumerator FlyTowardsTable()
+    {
+        m_rb.isKinematic = true;
+
+        float deceleration = CalculateDecleration(m_FlySpeed, transform.position, m_TablePos);
+        while (Vector3.Dot(m_FlyDir, (transform.position - m_TablePos).normalized) < 0)
+        {
+            // Move towards the target position
+            m_FlySpeed += deceleration * Time.deltaTime;
+            m_FlySpeed = Math.Max(m_FlySpeed, 3.0f);
+            transform.position += m_FlySpeed * m_FlyDir * Time.deltaTime;
+
+            // Wait for the next frame
+            yield return null;
+        }
+
+        m_rb.isKinematic = false;
     }
 
     void OnMouseDown()
