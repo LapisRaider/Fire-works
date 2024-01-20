@@ -5,16 +5,20 @@ using UnityEngine;
 
 
 enum TabletState {Hidden, Hovering, Opened, TotalStates}
-enum Screens { Profile, TotalScreens }
+public enum Screens { Home, Profile, TotalScreens }
 /// <summary>
 /// This file will handle changing of screens
 /// </summary>
 public class TabletManager : MonoBehaviour
 {
     public List<GameObject> tabletScreens;
+    public List<Sprite> tabletSprites;
     // Start is called before the first frame update
     [Tooltip("The increase in y position when hovering over the tablet")]
     public float hoverY = 0.0f;
+
+    [Tooltip("Reference to the game object rendering image of tablet")]
+    public GameObject tabletImage;
 
     //bool isHovering = false;
     Vector3 hoverPosition;
@@ -64,6 +68,11 @@ public class TabletManager : MonoBehaviour
             currState = TabletState.Hidden;
             StartCoroutine(LerpPosition(originalPosition, 0.5f));
         }
+    }
+
+    public void ButtonPress(Screens screen)
+    {
+
     }
 
     IEnumerator LerpPosition(Vector3 targetPosition, float duration)
