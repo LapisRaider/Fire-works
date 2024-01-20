@@ -95,9 +95,9 @@ public class TabletManager : SingletonBase<TabletManager>
     public void ButtonPress(int screen)
     {
         Debug.Log("Screen " + screen + " Pressed");
-        StartCoroutine(LerpRectPosition(new Vector3(0, 0, 0), 0.8f, tabletButtons[screen - 1].GetComponent<RectTransform>()));
-        StartCoroutine(LerpScale(new Vector3(4f, 4f, 0), 0.8f, tabletButtons[screen - 1].transform));
-        StartCoroutine(ScreenTransition(screen, 2.0f));
+        StartCoroutine(LerpRectPosition(new Vector3(0, 0, 0), 0.25f, tabletButtons[screen - 1].GetComponent<RectTransform>()));
+        StartCoroutine(LerpScale(new Vector3(4f, 4f, 0), 0.25f, tabletButtons[screen - 1].transform));
+        StartCoroutine(ScreenTransitionStart(screen, 0.3f));
         for(int i = 0; i < tabletButtons.Count; ++i)
         {
             if (i == screen - 1) continue;
@@ -116,6 +116,7 @@ public class TabletManager : SingletonBase<TabletManager>
     {
         for(int i = 0; i < tabletButtons.Count; ++i)
         {
+            tabletButtons[i].SetActive(true);
             tabletButtons[i].GetComponent<RectTransform>().anchoredPosition = buttonOriginalTransforms[i].anchoredPosition;
             tabletButtons[i].GetComponent<RectTransform>().localScale = buttonOriginalTransforms[i].localScale;
         }
@@ -192,31 +193,48 @@ public class TabletManager : SingletonBase<TabletManager>
         transform.localScale = new Vector3(1.4f, 1.4f, 0);
     }
 
-    IEnumerator ScreenTransition(int index, float duration)
+    IEnumerator ScreenTransitionStart(int index, float duration)
     {
         float time = 0;
         SpriteRenderer bgSprite = tabletBG.GetComponent<SpriteRenderer>();
-        Vector3 originalColor = new Vector3(255, 255, 255);
-        Vector3 targetColor = new Vector3(0, 0, 0);
+        //Color targetColor = new Color(0, 0, 0);
+        //Color originalColor = new Color(255, 255, 255);
         while (time < duration)
         {
-            if (time <= duration * 0.5f)
-            {
-                Vector3 newRGB = Vector3.Lerp(targetColor, originalColor, time / (duration * 0.5f));
-                bgSprite.color = new Color(newRGB.x, newRGB.y, newRGB.z);
-            }
-            else
-            {
-                if (bgSprite.sprite != tabletSprites[index])
-                    bgSprite.sprite = tabletSprites[index];
-
-                Vector3 newRGB = Vector3.Lerp(originalColor, targetColor, (time * 0.5f) / (duration * 0.5f));
-                bgSprite.color = new Color(newRGB.x, newRGB.y, newRGB.z);
-            }
+            Color rgb = Color.Lerp(Color.white, Color.black, time / duration);
+            bgSprite.color = rgb;
+            time += Time.deltaTime;
             yield return null;
         }
 
-        bgSprite.color = new Color(255, 255, 255);
+        bgSprite.color = Color.black;
+        for(int i = 0; i < tabletButtons.Count; ++i)
+        {
+            tabletButtons[i].SetActive(false);
+        }
+        StartCoroutine(ScreenTransitionEnd(index, duration));
+            //ChangeScreen(index);
+    }
+
+    IEnumerator ScreenTransitionEnd(int index, float duration)
+    {
+        float time = 0;
+        SpriteRenderer bgSprite = tabletBG.GetComponent<SpriteRenderer>();
+        //Color targetColor = new Color(0, 0, 0);
+        //Color originalColor = new Color(255, 255, 255);
+        while (time < duration)
+        {
+            Color rgb = Color.Lerp(Color.black, Color.white, time / duration);
+            bgSprite.color = rgb;
+
+            time += Time.deltaTime;
+            Debug.Log("Color : " + bgSprite.color);
+            yield return null;
+        }
+
+        bgSprite.color = Color.white;
         ChangeScreen(index);
     }
+
+
 }

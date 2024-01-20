@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class Graph : MonoBehaviour
 {
     public Sprite circleSprite;
-    private RectTransform graphContainer;
+    public RectTransform graphContainer;
 
     [Tooltip("Max number of points to show on graph")]
     public int maxPoints;
@@ -32,7 +32,7 @@ public class Graph : MonoBehaviour
     
     void Awake()
     {
-        graphContainer = GameObject.Find("GraphContainer").GetComponent<RectTransform>();
+        //graphContainer = GameObject.Find("GraphContainer").GetComponent<RectTransform>();
         listOfCircles = new List<GameObject>();
         listOfLines = new List<GameObject>();
         //List<int> valList = new List<int>() { 10, 20, 40, 70, 50, 40, 10,};
