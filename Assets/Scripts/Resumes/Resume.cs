@@ -18,8 +18,6 @@ public class Resume : MonoBehaviour
     private float m_InitialZCoord;
     private Vector3 m_PrevMousePos = Vector3.zero;
 
-    private float m_GrabYMinPos = 20.0f;
-
     [Header("Physics")]
     public float m_MaxThrowVelocity = 30.0f;
     private Rigidbody m_rb;
@@ -29,6 +27,9 @@ public class Resume : MonoBehaviour
     private Vector3 m_FlyDir = Vector3.zero;
     private Vector3 m_TablePos = Vector3.zero;
     private float m_FlySpeed = 1.0f;
+
+    [Header("Zoom state")]
+    private Vector3 m_BeforeZoomPos = Vector3.zero;
 
     private void Awake()
     {
@@ -78,21 +79,26 @@ public class Resume : MonoBehaviour
         m_rb.isKinematic = false;
     }
 
-    void OnMouseDown()
-    {
-        m_InitialClickTime = Time.time;
-        m_IsClick = true;
-
-        m_InitialZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
-        m_PaperToMouseOffset = gameObject.transform.position - GetMouseAsWorldPoint();
-    }
-
     private Vector3 GetMouseAsWorldPoint()
     {
         Vector3 mousePoint = Input.mousePosition;
         mousePoint.z = m_InitialZCoord;
 
         return Camera.main.ScreenToWorldPoint(mousePoint);
+    }
+
+    void OnMouseDown()
+    {
+        m_InitialClickTime = Time.time;
+        m_IsClick = true;
+
+        m_InitialZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
+        gameObject.transform.position = new Vector3(
+            gameObject.transform.position.x,
+            ResumeController.Instance.m_GrabYMinPos,
+            gameObject.transform.position.z
+            );
+        m_PaperToMouseOffset = gameObject.transform.position - GetMouseAsWorldPoint();
     }
 
     void OnMouseDrag()
@@ -108,8 +114,7 @@ public class Resume : MonoBehaviour
     {
         if (m_IsClick)
         {
-            // click behavior
-            Debug.Log("Clicked");
+            ZoomUp();
             return;
         }
 
@@ -123,5 +128,31 @@ public class Resume : MonoBehaviour
 
         // reset 
         m_IsClick = true;
+    }
+
+    private void ZoomUp()
+    {
+        //store old position
+        m_rb.isKinematic = true;
+
+        m_BeforeZoomPos = transform.position;
+
+        //change global state
+        ResumeController.Instance.m_CurrResumeFocused = this;
+
+        // lerp to screen
+
+        // when finish lerp to screen set bool to true
+
+        //on update, if true and player clicks anywhere on the screen that is not on the object
+    }
+
+    public bool ZoomOut()
+    {
+        // TODO: if havent zoom finish yet, say we cannot zoom out
+        m_rb.isKinematic = false;
+
+        transform.position = new Vector3(m_BeforeZoomPos.x, ResumeController.Instance.m_GrabYMinPos, m_BeforeZoomPos.z);
+        return true;
     }
 }
