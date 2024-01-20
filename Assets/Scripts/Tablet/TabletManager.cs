@@ -36,6 +36,8 @@ public class TabletManager : SingletonBase<TabletManager>
     TabletState currState;
     Screens currScreen;
 
+    public List<RectTransform> buttonOriginalTransforms;
+
     override public void Awake()
     {
         base.Awake();
@@ -48,6 +50,14 @@ public class TabletManager : SingletonBase<TabletManager>
         currScreen = Screens.Home;
         originalPosition = gameObject.GetComponent<Transform>().position;
         hoverPosition = gameObject.GetComponent<Transform>().position + new Vector3(0, 0, hoverY);
+        buttonOriginalTransforms = new List<RectTransform>();
+
+        for(int i = 0; i < tabletButtons.Count; ++i)
+        {
+            RectTransform temp = new RectTransform();
+            temp = tabletButtons[i].GetComponent<RectTransform>();
+            buttonOriginalTransforms.Add(temp);
+        }
     }
 
     // Update is called once per frame
@@ -100,6 +110,15 @@ public class TabletManager : SingletonBase<TabletManager>
     {
         tabletScreens[(int)currScreen].SetActive(false);
         tabletScreens[index].SetActive(true);
+    }
+
+    void ResetButtons()
+    {
+        for(int i = 0; i < tabletButtons.Count; ++i)
+        {
+            tabletButtons[i].GetComponent<RectTransform>().anchoredPosition = buttonOriginalTransforms[i].anchoredPosition;
+            tabletButtons[i].GetComponent<RectTransform>().localScale = buttonOriginalTransforms[i].localScale;
+        }
     }
 
     public void UpdatePieChart(int index, float val)
