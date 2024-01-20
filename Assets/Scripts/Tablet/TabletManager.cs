@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,6 +8,26 @@ using UnityEngine;
 
 enum TabletState {Hidden, Hovering, Opened, TotalStates}
 public enum Screens { Home, Profile, TotalScreens }
+
+[Serializable]
+public class ScreenObject
+{
+    public List<GameObject> uiObjects = new List<GameObject> ();
+}
+
+public struct savedUIObject
+{
+    public Vector3 originalPosition;
+    public Vector3 originalScale;
+
+    //public savedUIObject()
+    //{
+    //    originalPosition = new Vector3(0, 0, 0);
+    //    originalScale = new Vector3(0, 0, 0);
+    //}
+}
+
+
 /// <summary>
 /// This file will handle changing of screens
 /// </summary>
@@ -15,6 +36,7 @@ public class TabletManager : SingletonBase<TabletManager>
     public List<GameObject> tabletScreens;
     public List<Sprite> tabletSprites;
     public List<GameObject> tabletButtons;
+    public List<ScreenObject> screenObjects;
     // Start is called before the first frame update
     [Tooltip("The increase in y position when hovering over the tablet")]
     public float hoverY = 0.0f;
@@ -36,7 +58,8 @@ public class TabletManager : SingletonBase<TabletManager>
     TabletState currState;
     Screens currScreen;
 
-    public List<RectTransform> buttonOriginalTransforms;
+    public List<savedUIObject> savedUIObjects;
+   // public List<RectTransform> buttonOriginalTransforms;
 
     override public void Awake()
     {
@@ -50,13 +73,15 @@ public class TabletManager : SingletonBase<TabletManager>
         currScreen = Screens.Home;
         originalPosition = gameObject.GetComponent<Transform>().position;
         hoverPosition = gameObject.GetComponent<Transform>().position + new Vector3(0, 0, hoverY);
-        buttonOriginalTransforms = new List<RectTransform>();
+        savedUIObjects = new List<savedUIObject>();
+        //buttonOriginalTransforms = new List<RectTransform>();
 
-        for(int i = 0; i < tabletButtons.Count; ++i)
+        for (int i = 0; i < tabletButtons.Count; ++i)
         {
-            RectTransform temp = new RectTransform();
-            temp = tabletButtons[i].GetComponent<RectTransform>();
-            buttonOriginalTransforms.Add(temp);
+            savedUIObject savedObject = new savedUIObject();
+            savedObject.originalPosition = tabletButtons[i].GetComponent<RectTransform>().anchoredPosition;
+            savedObject.originalScale = tabletButtons[i].transform.localScale;
+            savedUIObjects.Add(savedObject);
         }
     }
 
@@ -95,31 +120,76 @@ public class TabletManager : SingletonBase<TabletManager>
     public void ButtonPress(int screen)
     {
         Debug.Log("Screen " + screen + " Pressed");
-        StartCoroutine(LerpRectPosition(new Vector3(0, 0, 0), 0.25f, tabletButtons[screen - 1].GetComponent<RectTransform>()));
-        StartCoroutine(LerpScale(new Vector3(4f, 4f, 0), 0.25f, tabletButtons[screen - 1].transform));
-        StartCoroutine(ScreenTransitionStart(screen, 0.3f));
-        for(int i = 0; i < tabletButtons.Count; ++i)
+        // Back buttons to go back to menu only has screen transitioning
+        if (screen != 0) // Only menu buttons going away from home screen has the scale effect
         {
-            if (i == screen - 1) continue;
+            StartCoroutine(LerpRectPosition(new Vector3(0, 0, 0), 0.25f, tabletButtons[screen - 1].GetComponent<RectTransform>()));
+            StartCoroutine(LerpScale(new Vector3(4f, 4f, 0), 0.25f, tabletButtons[screen - 1].transform));
+            for (int i = 0; i < tabletButtons.Count; ++i)
+            {
+                if (i == screen - 1) continue;
 
-            tabletButtons[i].SetActive(false);
+                tabletButtons[i].SetActive(false);
+            }
+
+            // If going into stats screen
+            if (screen == (int)Screens.Profile)
+            {
+                // Fade in the stats object
+            }
         }
+        // Going back to home screen
+        // Fade elements in those screens to black
+        else if (screen == 0)
+        {
+            // For profile, fade the graph and piechart
+            if (currScreen == Screens.Profile)
+            {
+                for(int i = 0; i < screenObjects[(int)currScreen].uiObjects.Count; ++i)
+                {
+                    ///NOTE: CURRENTLY BROKEN
+                    
+                    foreach(Transform child in screenObjects[(int)currScreen].uiObjects[i].transform)
+                    {
+                        // If it has a sprite renderer
+                        // it neeeds to fade
+                        if (child.gameObject.GetComponent<SpriteRenderer>() != null)
+                        {
+                            StartCoroutine(FadeEffect(true, 0.3f, child.gameObject));
+                        }
+                    }
+                }
+            }
+        }
+
+        StartCoroutine(ScreenTransitionStart(screen, 0.3f));
     }
 
     void ChangeScreen(int index)
     {
         tabletScreens[(int)currScreen].SetActive(false);
         tabletScreens[index].SetActive(true);
+        currScreen = (Screens)index;
+
+        if (currScreen == Screens.Home)
+        {
+            ResetButtons();
+        }
     }
 
     void ResetButtons()
     {
-        for(int i = 0; i < tabletButtons.Count; ++i)
+        for(int i = 0; i < savedUIObjects.Count; ++i)
         {
             tabletButtons[i].SetActive(true);
-            tabletButtons[i].GetComponent<RectTransform>().anchoredPosition = buttonOriginalTransforms[i].anchoredPosition;
-            tabletButtons[i].GetComponent<RectTransform>().localScale = buttonOriginalTransforms[i].localScale;
+            tabletButtons[i].GetComponent<RectTransform>().anchoredPosition = savedUIObjects[i].originalPosition;
+            tabletButtons[i].transform.localScale = savedUIObjects[i].originalScale;
         }
+    }
+
+    void ResetStats()
+    {
+
     }
 
     public void UpdatePieChart(int index, float val)
@@ -236,5 +306,37 @@ public class TabletManager : SingletonBase<TabletManager>
         ChangeScreen(index);
     }
 
+    IEnumerator FadeEffect(bool fade, float duration, GameObject objectToFade)
+    {
+        float time = 0;
+        SpriteRenderer bgSprite = objectToFade.GetComponent<SpriteRenderer>();
+        //Color targetColor = new Color(0, 0, 0);
+        //Color originalColor = new Color(255, 255, 255);
+        if (fade)
+        {
+            while (time < duration)
+            {
+                Color rgb = Color.Lerp(Color.white, Color.black, time / duration);
+                bgSprite.color = rgb;
+                time += Time.deltaTime;
+                yield return null;
+            }
 
+            bgSprite.color = Color.black;
+        }
+        else
+        {
+            while (time < duration)
+            {
+                Color rgb = Color.Lerp(Color.black, Color.white, time / duration);
+                bgSprite.color = rgb;
+                time += Time.deltaTime;
+                yield return null;
+            }
+
+            bgSprite.color = Color.white;
+
+        }
+
+    }
 }
