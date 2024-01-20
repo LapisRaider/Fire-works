@@ -12,6 +12,9 @@ public class ResumeController : SingletonBase<ResumeController>
     [Header("ZoomResumePos")]
     public Transform m_FinalZoomPos;
 
+    [Header("Trash Bin")]
+    public Transform m_TrashBinPos;
+
     public override void Awake()
     {
         base.Awake();
