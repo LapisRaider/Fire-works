@@ -9,7 +9,7 @@ public enum Screens { Home, Profile, TotalScreens }
 /// <summary>
 /// This file will handle changing of screens
 /// </summary>
-public class TabletManager : MonoBehaviour
+public class TabletManager : SingletonBase<TabletManager>
 {
     public List<GameObject> tabletScreens;
     public List<Sprite> tabletSprites;
@@ -25,12 +25,15 @@ public class TabletManager : MonoBehaviour
     Vector3 originalPosition;
     public Vector3 openPosition;
 
+    PieChart pieChartRef;
+
     TabletState currState;
     void Start()
     {
         currState = TabletState.Hidden;
         originalPosition = gameObject.GetComponent<Transform>().position;
         hoverPosition = gameObject.GetComponent<Transform>().position + new Vector3(0, 0, hoverY);
+        pieChartRef = GetComponent<PieChart>();
     }
 
     // Update is called once per frame
@@ -46,10 +49,10 @@ public class TabletManager : MonoBehaviour
         }
     }
 
-    public void ToggleScreen(int index)
-    {
+    //public void ToggleScreen(int index)
+    //{
 
-    }
+    //}
 
     public void OnMouseEnter()
     {
@@ -70,9 +73,14 @@ public class TabletManager : MonoBehaviour
         }
     }
 
-    public void ButtonPress(Screens screen)
+    public void ButtonPress(int screen)
     {
+        Debug.Log("Screen " + screen + " Pressed");
+    }
 
+    public void UpdatePieChart(int index, float val)
+    {
+        pieChartRef.SetValues(index, val);
     }
 
     IEnumerator LerpPosition(Vector3 targetPosition, float duration)
