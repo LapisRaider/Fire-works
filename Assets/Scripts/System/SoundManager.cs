@@ -19,6 +19,20 @@ public class SoundManager : SingletonBase<SoundManager>
         }
     }
 
+    public void Start()
+    {
+        //Play("BGMusic");
+    }
+
+    public void Update()
+    {
+        // When players click, play clicking sound
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    Play("MouseClick");
+        //}
+    }
+
     public void Play(string name)
     {
         Sound playingSound = Array.Find(m_SoundClipList, sound => sound.m_Name == name);
