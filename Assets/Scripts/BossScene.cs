@@ -2,6 +2,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public class BossScene : SingletonBase<BossScene>
 {
@@ -14,6 +15,11 @@ public class BossScene : SingletonBase<BossScene>
 
     private bool isTypeing = false;
 
+    public void Start()
+    {
+        TextToSay = GameManager.Instance.bossStrings.ToList();
+        TextToSay.Add("Press to continue");
+    }
     public void SayText()
     {
         StartCoroutine(SayTextIterate());
@@ -26,7 +32,7 @@ public class BossScene : SingletonBase<BossScene>
 
         ++CurrSentence;
         if (CurrSentence >= TextToSay.Count)
-            return;
+            ChangeScene.Instance.NextScene();
 
         CurrIndex = 0;
         CurrStrSaid = "";
