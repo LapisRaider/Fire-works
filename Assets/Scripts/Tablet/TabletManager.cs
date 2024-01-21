@@ -9,7 +9,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 enum TabletState {Hidden, Hovering, Opened, TotalStates}
-public enum Screens { Home, Profile, TotalScreens }
+public enum Screens { Home, Profile, Help, TotalScreens }
 
 [Serializable]
 public class ScreenObject
@@ -39,6 +39,7 @@ public class TabletManager : SingletonBase<TabletManager>, IPointerEnterHandler,
     public List<Sprite> tabletSprites;
     public List<GameObject> tabletButtons;
     public List<ScreenObject> screenObjects;
+    public List<String> helpTextList;
     // Start is called before the first frame update
     [Tooltip("The increase in y position when hovering over the tablet")]
     public float hoverY = 0.0f;
@@ -63,6 +64,8 @@ public class TabletManager : SingletonBase<TabletManager>, IPointerEnterHandler,
     Screens currScreen;
 
     bool isHovering = false;
+
+    public TextMeshProUGUI helpText;
 
     public List<savedUIObject> savedUIObjects;
    // public List<RectTransform> buttonOriginalTransforms;
@@ -116,19 +119,6 @@ public class TabletManager : SingletonBase<TabletManager>, IPointerEnterHandler,
         }
     }
 
-    
-
-   // public void OnMouseEnter()
-    //{
-    //    Debug.Log("HOVERING OVER TABLET");
-    //    if(currState == TabletState.Hidden)
-    //    {
-    //        currState = TabletState.Hovering;
-    //        StartCoroutine(LerpPosition(hoverPosition, 0.5f, this.transform));
-    //    }
-
-    //    isHovering = true;
-    //}
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -157,17 +147,6 @@ public class TabletManager : SingletonBase<TabletManager>, IPointerEnterHandler,
 
     }
 
-    //public void OnMouseExit()
-    //{
-    //    if (currState == TabletState.Hovering)
-    //    {
-    //        currState = TabletState.Hidden;
-    //        StartCoroutine(LerpPosition(originalPosition, 0.5f, this.transform));
-    //    }
-
-    //    isHovering = false;
-    //}
-
     public void ButtonPress(int screen)
     {
         Debug.Log("Screen " + screen + " Pressed");
@@ -190,6 +169,10 @@ public class TabletManager : SingletonBase<TabletManager>, IPointerEnterHandler,
             {
                 // Fade in the stats object
                 ResetStats();
+            }
+            if (screen == (int)Screens.Help)
+            {
+                ResetHelp();
             }
         }
         // Going back to home screen
@@ -258,7 +241,18 @@ public class TabletManager : SingletonBase<TabletManager>, IPointerEnterHandler,
         }
     }
 
-    void ResetStats()
+    void ResetHelp()
+    {
+        for (int i = 0; i < screenObjects[(int)Screens.Profile].uiObjects.Count; ++i)
+        {
+            if (screenObjects[(int)Screens.Profile].uiObjects[i].GetComponent<Button>() != null)
+            {
+                screenObjects[(int)Screens.Profile].uiObjects[i].GetComponent<Button>().enabled = true;
+            }
+        }
+    }
+
+        void ResetStats()
     {
         for (int i = 0; i < screenObjects[(int)Screens.Profile].uiObjects.Count; ++i)
         {
@@ -290,7 +284,11 @@ public class TabletManager : SingletonBase<TabletManager>, IPointerEnterHandler,
                 }
             }
         }
+    }
 
+    public void ToggleHelpText(int index)
+    {
+        helpText.text = helpTextList[index];
     }
 
     public void UpdatePieChart(int index, float val)
