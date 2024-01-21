@@ -46,6 +46,11 @@ public class GameManager : SingletonBase<GameManager>
     
     public static event OnNewMonth onNewMonth = null;
 
+    [Header("Animation")]
+    public Animator m_ExitTransition;
+    public string m_SceneName;
+    public float m_TransitionDuration = 1.2f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -100,7 +105,6 @@ public class GameManager : SingletonBase<GameManager>
     }
 
     void EndOfYearUpdate() {
-        // TODO: Transition to boss
         currentYear++;
 
         if (currentYear == 4) {
@@ -114,7 +118,7 @@ public class GameManager : SingletonBase<GameManager>
         } else {
             bossStrings = new string[3]{ "I've noticed a bit of pond stagnation lately.", "We're in a pond, not a snooze-fest!", "Enough with the sluggishness it's time to leap!" };
         }
-        SceneManager.LoadScene("FiredScene");
+        ChangeScene.Instance.NextScene();
     }
 
     public void Hire(float _hiringCost, JOB_DEPARTMENT _department, int _level) {

@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class ChangeScene : MonoBehaviour
+public class ChangeScene : SingletonBase<ChangeScene>
 {
     public Animator m_ExitTransition;
     public string m_SceneName;
