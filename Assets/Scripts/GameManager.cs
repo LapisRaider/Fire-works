@@ -15,6 +15,7 @@ public enum JOB_DEPARTMENT {
 
 public class GameManager : SingletonBase<GameManager>
 {
+    public string[] bossStrings;
     public int[] departments = new int[(int)JOB_DEPARTMENT.TOTAL_DEPARTMENTS];
 
     // In game timer for month and quarters of month
@@ -208,7 +209,11 @@ public class GameManager : SingletonBase<GameManager>
         
         TabletManager.Instance.AddPointToGraph((int)currentMoney);
 
-
+        if (currentMoney <= 0) {
+            // TODO:Profits decrease heavily, CEO not happy
+            bossStrings = new string[5]{ "Listen up bucko.", "Your financial acrobatics have turned our thriving swamp into a muck-filled disaster!", "Consider this your leap of shame and get out of my office!" };
+            SceneManager.LoadScene("FiredScene");
+        }
 
         /////// Old calculations
         // currentCost = 10 - Mathf.Clamp(Mathf.Log(departments[(int)JOB_DEPARTMENT.FINANCE], 1.4f), 0.0f, 10.0f);
