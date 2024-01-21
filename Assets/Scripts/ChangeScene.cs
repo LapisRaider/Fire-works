@@ -10,6 +10,12 @@ public class ChangeScene : SingletonBase<ChangeScene>
 
     public void NextScene()
     {
+        GameManager.Instance.Refresh();
+        StartCoroutine(ChangeSceneAnim());
+    }
+    public void FinalScene()
+    {
+        m_SceneName = "FinalScene";
         StartCoroutine(ChangeSceneAnim());
     }
     

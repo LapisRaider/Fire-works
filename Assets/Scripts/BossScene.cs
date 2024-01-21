@@ -31,8 +31,13 @@ public class BossScene : SingletonBase<BossScene>
             return;
 
         ++CurrSentence;
-        if (CurrSentence >= TextToSay.Count)
-            ChangeScene.Instance.NextScene();
+        if (CurrSentence >= TextToSay.Count) {
+            if (GameManager.Instance.restart) {
+                ChangeScene.Instance.FinalScene();
+            } else {
+                ChangeScene.Instance.NextScene();
+            }
+        }
 
         CurrIndex = 0;
         CurrStrSaid = "";

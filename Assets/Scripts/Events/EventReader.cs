@@ -88,9 +88,9 @@ public class EventReader : MonoBehaviour
         //Every January and may for now
         if (activeEvent == null)
         {
+            Debug.Log("AAA" + GameManager.Instance.currentMonth + " A" + GameManager.Instance.currentQuarter);
             if (GameManager.Instance.currentMonth == 0 && GameManager.Instance.currentQuarter == 1)
             {
-                Debug.Log("AAA");
                 TriggerEvent(JOB_DEPARTMENT.SECURITY);
             }
             else if (GameManager.Instance.currentMonth == 4 && GameManager.Instance.currentQuarter == 0)
