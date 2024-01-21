@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/FiredScene.unity
     guid: 3e2f6045fd6f95247b1f8355aa06ea7f
+  - enabled: 1
+    path: Assets/Scenes/FinalScene.unity
+    guid: 580b55d519472bc44b9dcd66c4239fa5
   m_configObjects: {}
