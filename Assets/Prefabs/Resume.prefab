@@ -737,6 +737,14 @@ MonoBehaviour:
       m_Animal: {fileID: 0}
       m_Clothe: {fileID: 0}
     m_ImgDataTotal: {fileID: 3981499417324359306}
+  m_Data:
+    ExpertiseLevel: 0
+    Salary: 0
+    Name: 
+    Description: 
+    m_Department: 0
+    m_HaveCloth: 0
+    m_AnimalPhotoIndex: 0
   m_ClickTimeThreshold: 0.2
   m_MaxThrowVelocity: 45
   m_MaxZoomSpeed: 1

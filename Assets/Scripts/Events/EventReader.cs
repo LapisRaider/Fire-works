@@ -90,6 +90,7 @@ public class EventReader : MonoBehaviour
         {
             if (GameManager.Instance.currentMonth == 0 && GameManager.Instance.currentQuarter == 1)
             {
+                Debug.Log("AAA");
                 TriggerEvent(JOB_DEPARTMENT.SECURITY);
             }
             else if (GameManager.Instance.currentMonth == 4 && GameManager.Instance.currentQuarter == 0)
