@@ -93,9 +93,16 @@ public class EventReader : MonoBehaviour
         // There is a delayed action
         if (activeEvent != null && activeEvent.delayed)
         {
-            // TODO: JAVIER CALCULATE THE CHANCES 
-            //GameManager.Instance.departments[(int)JOB_DEPARTMENT.SECURITY];
-            GameManager.Instance.currentMoney *= 0.5f;
+            float odds = ((Mathf.Log(GameManager.Instance.departments[(int)JOB_DEPARTMENT.SECURITY])/Mathf.Log(5)) + 1) / 2;
+            odds = Mathf.Clamp(odds, 0.0f, 1.0f);
+
+            float r = UnityEngine.Random.Range(0.0f, 1.0f);
+            if (r > odds) {
+                // Fail odds
+                GameManager.Instance.currentMoney *= 0.5f;
+
+                //TODO GID ADD NEWS
+            }
 
             activeEvent = null;
         }

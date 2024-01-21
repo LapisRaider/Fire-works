@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum JOB_DEPARTMENT {
     HR,         // Increase number of applicants
@@ -211,7 +212,7 @@ public class GameManager : SingletonBase<GameManager>
 
         if (currentMoney <= 0) {
             // TODO:Profits decrease heavily, CEO not happy
-            bossStrings = new string[5]{ "Listen up bucko.", "Your financial acrobatics have turned our thriving swamp into a muck-filled disaster!", "Consider this your leap of shame and get out of my office!" };
+            bossStrings = new string[3]{ "Listen up bucko.", "Your financial acrobatics have turned our thriving swamp into a muck-filled disaster!", "Consider this your leap of shame and get out of my office!" };
             SceneManager.LoadScene("FiredScene");
         }
 
