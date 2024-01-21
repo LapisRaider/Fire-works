@@ -116,8 +116,6 @@ public class Graph : MonoBehaviour
             {
                 RectTransform firstTransform = listOfCircles[i].GetComponent<RectTransform>();
                 RectTransform secondTransform = listOfCircles[i + 1].GetComponent<RectTransform>();
-                Debug.Log("First Pos: " + firstTransform.anchoredPosition);
-                Debug.Log("Second Pos: " + secondTransform.anchoredPosition);
                 Vector2 tempPos = firstTransform.anchoredPosition; // Store the first points transform
                 firstTransform.anchoredPosition = new Vector2(firstTransform.anchoredPosition.x, secondTransform.anchoredPosition.y);
                 secondTransform.anchoredPosition = new Vector2(secondTransform.anchoredPosition.x, tempPos.y);
