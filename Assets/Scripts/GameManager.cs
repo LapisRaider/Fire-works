@@ -70,7 +70,7 @@ public class GameManager : SingletonBase<GameManager>
         TabletManager.Instance.InitPieChart(departments);
     }
 
-    void InitValues() {
+    public void InitValues() {
         currentYear = 0;
 
         departments[(int)JOB_DEPARTMENT.HR] = 1;

@@ -1851,6 +1851,7 @@ GameObject:
   - component: {fileID: 1328813657}
   - component: {fileID: 1328813656}
   - component: {fileID: 1328813655}
+  - component: {fileID: 1328813659}
   m_Layer: 0
   m_Name: ' MonthsCounter'
   m_TagString: Untagged
@@ -1959,6 +1960,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &1328813659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1328813654}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccca3e9ef774ccb4593b68e297b75390, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Tens: {fileID: 1505116032}
+  Ones: {fileID: 1418291857}
 --- !u!1 &1332630039
 GameObject:
   m_ObjectHideFlags: 0
@@ -3872,6 +3887,63 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1940304795}
   m_CullTransparentMesh: 1
+--- !u!1001 &1960540587
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7696111900865049846, guid: e6fd1e7b9b0a2f94a9874ee4e7089509, type: 3}
+      propertyPath: m_RootOrder
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7696111900865049846, guid: e6fd1e7b9b0a2f94a9874ee4e7089509, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 902.0205
+      objectReference: {fileID: 0}
+    - target: {fileID: 7696111900865049846, guid: e6fd1e7b9b0a2f94a9874ee4e7089509, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 712.529
+      objectReference: {fileID: 0}
+    - target: {fileID: 7696111900865049846, guid: e6fd1e7b9b0a2f94a9874ee4e7089509, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -6.0713134
+      objectReference: {fileID: 0}
+    - target: {fileID: 7696111900865049846, guid: e6fd1e7b9b0a2f94a9874ee4e7089509, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7696111900865049846, guid: e6fd1e7b9b0a2f94a9874ee4e7089509, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7696111900865049846, guid: e6fd1e7b9b0a2f94a9874ee4e7089509, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7696111900865049846, guid: e6fd1e7b9b0a2f94a9874ee4e7089509, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7696111900865049846, guid: e6fd1e7b9b0a2f94a9874ee4e7089509, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7696111900865049846, guid: e6fd1e7b9b0a2f94a9874ee4e7089509, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7696111900865049846, guid: e6fd1e7b9b0a2f94a9874ee4e7089509, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8093993755638318079, guid: e6fd1e7b9b0a2f94a9874ee4e7089509, type: 3}
+      propertyPath: m_Name
+      value: SoundManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: e6fd1e7b9b0a2f94a9874ee4e7089509, type: 3}
 --- !u!1 &1989473130
 GameObject:
   m_ObjectHideFlags: 0
@@ -4038,6 +4110,7 @@ MonoBehaviour:
   m_ExitTransition: {fileID: 2100602280}
   m_SceneName: FiredScene
   m_TransitionDuration: 1.2
+  m_isDoneTransition: 0
 --- !u!95 &2100602280
 Animator:
   serializedVersion: 5
