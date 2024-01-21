@@ -454,7 +454,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bDontDestroyOnLoad: 0
   TextToSay: fhuiwerhuiferhuifer
-  text: {fileID: 0}
+  text: {fileID: 666572737}
+  TypeSpeed: 0.2
 --- !u!95 &784229857
 Animator:
   serializedVersion: 5
