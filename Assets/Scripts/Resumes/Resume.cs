@@ -121,6 +121,7 @@ public class Resume : MonoBehaviour
         m_InitialClickTime = Time.time;
         m_IsClick = true;
 
+        SoundManager.Instance.Play("PickUp", SoundManager.Instance.m_effectsSource);
         m_InitialZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
         m_PaperToMouseOffset = gameObject.transform.position - GetMouseAsWorldPoint();
     }
@@ -284,6 +285,7 @@ public class Resume : MonoBehaviour
     private void ThrowAway(bool isThrownIntoTrash = true)
     {
         m_IsThrown = true;
+        SoundManager.Instance.Play("ThrowPaper", SoundManager.Instance.m_effectsSource);
         StartCoroutine(ThrowAwayAnimation(isThrownIntoTrash));
     }
 
@@ -315,6 +317,7 @@ public class Resume : MonoBehaviour
 
     public void Hired()
     {
+        SoundManager.Instance.Play("Stamp", SoundManager.Instance.m_effectsSource);
         GameManager.Instance.Hire(ResumeController.Instance.m_CurrResumeFocused.m_Data);
         StartCoroutine(HireAnimation());
     }

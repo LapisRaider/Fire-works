@@ -5,6 +5,9 @@ public class SoundManager : SingletonBase<SoundManager>
 {
     public Sound[] m_SoundClipList;
 
+    public AudioSource m_bgSource;
+    public AudioSource m_effectsSource;
+
     public override void Awake()
     {
         foreach(Sound sound in m_SoundClipList)
@@ -21,16 +24,16 @@ public class SoundManager : SingletonBase<SoundManager>
 
     public void Start()
     {
-        //Play("BGMusic");
+        Play("BGMusic", m_bgSource);
     }
 
     public void Update()
     {
         // When players click, play clicking sound
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    Play("MouseClick");
-        //}
+        if(Input.GetMouseButtonDown(0))
+        {
+            Play("MouseClick", m_effectsSource);
+        }
     }
 
     public void Play(string name)
