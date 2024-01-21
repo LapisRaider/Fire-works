@@ -110,7 +110,7 @@ public class GameManager : SingletonBase<GameManager>
         currentYear++;
     }
 
-    public void Hire(float _hiringCost, JOB_DEPARTMENT _department) {
+    public void Hire(float _hiringCost, JOB_DEPARTMENT _department, int _level) {
         departments[(int)_department] += 1;
         currentMoney -= _hiringCost;
         currentSalaries += _hiringCost + currentMarketSalary;
@@ -122,58 +122,60 @@ public class GameManager : SingletonBase<GameManager>
                 // Handled in ResumeManager
             } break;
             case JOB_DEPARTMENT.MARKETING: {
-                if (Mathf.Abs(departments[(int)JOB_DEPARTMENT.MARKETING] + currentDemand - departments[(int)JOB_DEPARTMENT.PRODUCTION]) <= 1) {
-                    currentProfits += 5.0f * currentSalaries;
-                    if (currentProfits > 5.0f * currentSalaries) {
-                        currentProfits = 5.0f * currentSalaries;
-                    }
-                } else if (Mathf.Abs(departments[(int)JOB_DEPARTMENT.MARKETING] + currentDemand - departments[(int)JOB_DEPARTMENT.PRODUCTION]) <= 3) {
-                    currentProfits += 2.5f * currentSalaries;
+                if (departments[(int)JOB_DEPARTMENT.MARKETING] + currentDemand - departments[(int)JOB_DEPARTMENT.PRODUCTION] >= 3) {
+                    currentProfits -= currentSalaries * ((_level - 1) * -0.2f + 1.0f);
+                } else if (departments[(int)JOB_DEPARTMENT.MARKETING] + currentDemand - departments[(int)JOB_DEPARTMENT.PRODUCTION] >= 0) {
+                    currentProfits += 2.5f * currentSalaries * ((_level - 1) * 0.2f + 1.0f);
                     if (currentProfits > 2.5f * currentSalaries) {
                         currentProfits = 2.5f * currentSalaries;
                     }
                 } else {
-                    currentProfits -= currentSalaries;
+                    currentProfits += 5.0f * currentSalaries * ((_level - 1) * 0.2f + 1.0f);
+                    if (currentProfits > 5.0f * currentSalaries) {
+                        currentProfits = 5.0f * currentSalaries;
+                    }
                 }
             } break;
             case JOB_DEPARTMENT.PRODUCTION: {
-                if (Mathf.Abs(departments[(int)JOB_DEPARTMENT.MARKETING] + currentDemand - departments[(int)JOB_DEPARTMENT.PRODUCTION]) <= 1) {
-                    currentProfits += 5.0f * currentSalaries;
-                    if (currentProfits > 5.0f * currentSalaries) {
-                        currentProfits = 5.0f * currentSalaries;
-                    }
-                } else if (Mathf.Abs(departments[(int)JOB_DEPARTMENT.MARKETING] + currentDemand - departments[(int)JOB_DEPARTMENT.PRODUCTION]) <= 3) {
-                    currentProfits += 2.5f * currentSalaries;
+                if (departments[(int)JOB_DEPARTMENT.PRODUCTION] - currentDemand - departments[(int)JOB_DEPARTMENT.MARKETING] >= 3) {
+                    currentProfits -= currentSalaries * ((_level - 1) * -0.2f + 1.0f);
+                } else if (departments[(int)JOB_DEPARTMENT.PRODUCTION] - currentDemand - departments[(int)JOB_DEPARTMENT.MARKETING] >= 0) {
+                    currentProfits += 2.5f * currentSalaries * ((_level - 1) * 0.2f + 1.0f);
                     if (currentProfits > 2.5f * currentSalaries) {
                         currentProfits = 2.5f * currentSalaries;
                     }
                 } else {
-                    currentProfits -= currentSalaries;
+                    currentProfits += 5.0f * currentSalaries * ((_level - 1) * 0.2f + 1.0f);
+                    if (currentProfits > 5.0f * currentSalaries) {
+                        currentProfits = 5.0f * currentSalaries;
+                    }
                 }
             } break;
             case JOB_DEPARTMENT.QA: {
                 if (departments[(int)JOB_DEPARTMENT.MARKETING] + departments[(int)JOB_DEPARTMENT.PRODUCTION] > 2 * departments[(int)JOB_DEPARTMENT.QA]) {
-                    currentProfits += 2.0f * currentSalaries;
+                    currentProfits += 2.0f * currentSalaries * ((_level - 1) * 0.2f + 1.0f);
                     if (currentProfits > 2.5f * currentSalaries) {
                         currentProfits = 2.5f * currentSalaries;
                     }
                 }
             } break;
             case JOB_DEPARTMENT.FINANCE: {
-                
+                if (currentSalaries < 0) {
+                    currentSalaries *= 0.67f * ((_level - 1) * 0.2f + 1.0f);
+                } else if (currentProfits < currentSalaries * 4) {
+                    currentProfits *= 1.67f * currentProfits * ((_level - 1) * 0.2f + 1.0f);
+                }
             } break;
             case JOB_DEPARTMENT.RESEARCH: {
-                // TODO
             } break;
             case JOB_DEPARTMENT.SECURITY: {
-                // TODO
             } break;
 
             default: break;
         }
     }
     public void Hire(Candidate _candidate) {
-        Hire(_candidate.Salary, _candidate.m_Department);
+        Hire(_candidate.Salary, _candidate.m_Department, _candidate.ExpertiseLevel);
     }
 
     void UpdateFinances() {
@@ -187,19 +189,32 @@ public class GameManager : SingletonBase<GameManager>
             } break;
             case 1:
             {
-
+                if (currentMonth >= 2) {
+                    currentDemand -= 0.25f;
+                }
             } break;
             case 2:
             {
-
+                if (currentMonth >= 1) {
+                    currentDemand -= 0.25f;
+                }
+                if (currentMonth >= 3) {
+                    currentMarketSalary += 25.0f;
+                }
             } break;
             case 3:
             {
-
+                if (currentMonth >= 1) {
+                    currentDemand -= 0.25f;
+                }
+                if (currentMonth >= 1) {
+                    currentMarketSalary += 25.0f;
+                }
             } break;
             case 4:
             {
-
+                currentMarketSalary += 25.0f;
+                currentDemand -= 0.25f;                
             } break;
             default: break;
         }
