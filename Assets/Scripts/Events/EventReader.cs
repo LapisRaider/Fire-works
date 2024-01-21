@@ -38,6 +38,7 @@ public class EventReader : MonoBehaviour
     void Start()
     {
         initialStr = textObj.text.ToString();
+        GameManager.onNewMonth += Call;
     }
 
     // Update is called once per frame
@@ -60,6 +61,10 @@ public class EventReader : MonoBehaviour
                     // Reset the event
                     eventTriggered = false;
                     textObj.text = initialStr;
+                    if (activeEvent != null && activeEvent.delayed == false)
+                    {
+                        activeEvent = null;
+                    }
                 }
             }
         }
@@ -70,8 +75,41 @@ public class EventReader : MonoBehaviour
         }
     }
 
+    void Call()
+    {
+        //Every January and may for now
+        if (activeEvent == null)
+        {
+            if (GameManager.Instance.currentMonth == 0 && GameManager.Instance.currentQuarter == 1)
+            {
+                TriggerEvent(JOB_DEPARTMENT.SECURITY);
+            }
+            else if (GameManager.Instance.currentMonth == 4 && GameManager.Instance.currentQuarter == 0)
+            {
+                TriggerEvent(JOB_DEPARTMENT.SECURITY);
+            }
+        }
+
+        // There is a delayed action
+        if (activeEvent != null && activeEvent.delayed)
+        {
+            // TODO: JAVIER CALCULATE THE CHANCES 
+            //GameManager.Instance.departments[(int)JOB_DEPARTMENT.SECURITY];
+            GameManager.Instance.currentMoney *= 0.5f;
+
+            activeEvent = null;
+        }
+       // bool a = true;
+    }
+
     public void TriggerEvent(JOB_DEPARTMENT targetDepartment)
     {
+        if (activeEvent != null)
+        {
+            Debug.Log("Event alreayd active!");
+            return;
+        }
+
         eventTriggered = true;
         for(int i = 0; i < listOfEvents.Count; i++)
         {
@@ -79,15 +117,9 @@ public class EventReader : MonoBehaviour
             {
                 // Pick a random event from this
                 int randomNum = UnityEngine.Random.Range(0, listOfEvents[i].events.Count);
-                if (activeEvent == null)
-                {
-                    activeEvent = listOfEvents[i].events[randomNum];
-                    textObj.text += activeEvent.eventText;
-                }
-                else
-                {
-                    Debug.Log("Event alreayd active!");
-                }
+                activeEvent = listOfEvents[i].events[randomNum];
+                textObj.text += activeEvent.eventText;
+
                 break;
             }
         }
