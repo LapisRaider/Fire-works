@@ -77,10 +77,10 @@ public class EventReader : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            TriggerEvent(JOB_DEPARTMENT.SECURITY);
-        }
+        //if (Input.GetKeyDown(KeyCode.E))
+        //{
+        //    TriggerEvent(JOB_DEPARTMENT.SECURITY);
+        //}
     }
 
     void Call()
