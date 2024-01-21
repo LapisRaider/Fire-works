@@ -8,7 +8,7 @@ public class Resume : MonoBehaviour
 {
     [Header("Data")]
     public ResumeUI m_ResumeUI;
-    Candidate m_Data;
+    public Candidate m_Data;
 
 
     [Header("Clicking")]
@@ -315,6 +315,7 @@ public class Resume : MonoBehaviour
 
     public void Hired()
     {
+        GameManager.Instance.Hire(ResumeController.Instance.m_CurrResumeFocused.m_Data);
         StartCoroutine(HireAnimation());
     }
 

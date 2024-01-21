@@ -57,7 +57,21 @@ public class ResumeManager : SingletonBase<ResumeManager>
     {
         //TODO: generate data
         Candidate candidate = new Candidate();
-        candidate.m_Department = (JOB_DEPARTMENT)Random.Range((int)JOB_DEPARTMENT.HR, (int)JOB_DEPARTMENT.TOTAL_DEPARTMENTS);
+
+        if (GameManager.Instance.currentYear == 0) {
+            candidate.m_Department = (JOB_DEPARTMENT)Random.Range((int)JOB_DEPARTMENT.HR, (int)JOB_DEPARTMENT.FINANCE);
+            candidate.ExpertiseLevel = 0;
+        } else if (GameManager.Instance.currentYear == 1) {
+            candidate.m_Department = (JOB_DEPARTMENT)Random.Range((int)JOB_DEPARTMENT.HR, (int)JOB_DEPARTMENT.RESEARCH);
+            candidate.ExpertiseLevel = 0;
+        } else if (GameManager.Instance.currentYear == 2) {
+            candidate.m_Department = (JOB_DEPARTMENT)Random.Range((int)JOB_DEPARTMENT.HR, (int)JOB_DEPARTMENT.TOTAL_DEPARTMENTS);
+            candidate.ExpertiseLevel = 0;
+        } else {
+            candidate.m_Department = (JOB_DEPARTMENT)Random.Range((int)JOB_DEPARTMENT.HR, (int)JOB_DEPARTMENT.TOTAL_DEPARTMENTS);
+            candidate.ExpertiseLevel = (int)Random.Range(0, 3);
+        }
+
         candidate.m_AnimalPhotoIndex = Random.Range(0, 7);
         candidate.m_HaveCloth = Random.Range(0, 2) == 0;
 

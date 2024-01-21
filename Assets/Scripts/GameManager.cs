@@ -4,11 +4,11 @@ using UnityEngine;
 
 public enum JOB_DEPARTMENT {
     HR,         // Increase number of applicants
-    FINANCE,    // Decrease costs of product and hires
     MARKETING,  // Generate demand every quarter
     PRODUCTION, // Generate supply every quarter
-    RESEARCH,   // Increases breakthrough chance
     QA,         // Increases price of product
+    FINANCE,    // Decrease costs of product and hires
+    RESEARCH,   // Increases breakthrough chance
     SECURITY,   // Decreases chance of breach
     TOTAL_DEPARTMENTS,
 }
@@ -17,7 +17,8 @@ public class GameManager : SingletonBase<GameManager>
 {
     public int[] departments = new int[(int)JOB_DEPARTMENT.TOTAL_DEPARTMENTS];
 
-    // In game timer for month and quarters of month 
+    // In game timer for month and quarters of month
+    public int currentYear;    // 0 is first year, 4 is last year (Once 5th year ends, go to ending)
     public int currentMonth;    // 0 is January, 11 is December
     public int currentQuarter;  // 0 is first quarter of month, 3 is last
     public float quarterMonthTime;  // Time taken for a quarter of a month
@@ -31,10 +32,13 @@ public class GameManager : SingletonBase<GameManager>
 
     // Stock graph variables
     public float currentMoney;
+    public float currentMarketSalary;
     public float currentPrice;
     public float currentCost;
     public float currentSupply;
     public float currentDemand;
+    public float currentProfits;
+    public float currentSalaries;
     
     // Negative events
     public float demandLossRate; // How much of demand is lost over time
@@ -56,18 +60,20 @@ public class GameManager : SingletonBase<GameManager>
     // TODO : Change values based on balancing
     void InitValues() {
         currentMonth = 0;
-        quarterMonthTime = 1.0f;
+        quarterMonthTime = 2.5f;
         quarterMonthTimer = 0.0f;
 
         departments[(int)JOB_DEPARTMENT.HR] = 1;
-        departments[(int)JOB_DEPARTMENT.FINANCE] = 1;
         departments[(int)JOB_DEPARTMENT.MARKETING] = 0;
         departments[(int)JOB_DEPARTMENT.PRODUCTION] = 1;
-        departments[(int)JOB_DEPARTMENT.RESEARCH] = 0;
         departments[(int)JOB_DEPARTMENT.QA] = 0;
+        departments[(int)JOB_DEPARTMENT.FINANCE] = 1;
+        departments[(int)JOB_DEPARTMENT.RESEARCH] = 0;
         departments[(int)JOB_DEPARTMENT.SECURITY] = 0;
         
         currentMoney = 1000;
+        currentSalaries = 50;
+        currentMarketSalary = 0.0f;
 
         TabletManager.Instance.InitPieChart(departments);
 
@@ -86,10 +92,12 @@ public class GameManager : SingletonBase<GameManager>
 
             if (currentQuarter >= 4) {
                 currentQuarter = 0;
+                currentMonth++;
                 if (onNewMonth != null) { onNewMonth(); }
             }
 
             if (currentMonth >= 12) {
+                currentMonth = 0;
                 EndOfYearUpdate();
             }
         }
@@ -97,18 +105,80 @@ public class GameManager : SingletonBase<GameManager>
 
     void EndOfYearUpdate() {
         // TODO: Transition to boss
-
+        currentYear++;
     }
 
-    public void Hire(int _hiringCost, JOB_DEPARTMENT _department) {
+    public void Hire(float _hiringCost, JOB_DEPARTMENT _department) {
         departments[(int)_department] += 1;
         currentMoney -= _hiringCost;
+        currentSalaries += _hiringCost + currentMarketSalary;
         TabletManager.Instance.UpdatePieChart((int)_department, departments[(int)_department]);
+
+        switch (_department)
+        {
+            case JOB_DEPARTMENT.HR: {
+                // Handled in ResumeManager
+            } break;
+            case JOB_DEPARTMENT.MARKETING: {
+                currentProfits += 5 * currentSalaries;
+            } break;
+            case JOB_DEPARTMENT.PRODUCTION: {
+                currentProfits += 3 * currentSalaries;
+            } break;
+            case JOB_DEPARTMENT.QA: {
+                currentProfits += 1 * currentSalaries;
+            } break;
+            case JOB_DEPARTMENT.FINANCE: {
+                
+            } break;
+            case JOB_DEPARTMENT.RESEARCH: {
+                // TODO
+            } break;
+            case JOB_DEPARTMENT.SECURITY: {
+                // TODO
+            } break;
+
+            default: break;
+        }
+    }
+    public void Hire(Candidate _candidate) {
+        Hire(_candidate.Salary, _candidate.m_Department);
     }
 
     void UpdateFinances() {
-        float profit;
+float profit = 0;
 
+        switch (currentYear)
+        {
+            case 0:
+            {
+                if (currentMonth >= 3) {
+                    currentDemand -= 0.25f;
+                }
+            } break;
+            case 1:
+            {
+
+            } break;
+            case 2:
+            {
+
+            } break;
+            case 3:
+            {
+
+            } break;
+            case 4:
+            {
+
+            } break;
+            default: break;
+        }
+        
+        currentProfits -= currentSalaries;
+        if (currentProfits < 0) { currentProfits = 0; }
+        currentMoney += currentProfits - currentSalaries;
+        
         TabletManager.Instance.AddPointToGraph((int)currentMoney);
 
 
