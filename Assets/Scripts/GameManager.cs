@@ -73,7 +73,7 @@ public class GameManager : SingletonBase<GameManager>
         
         currentMoney = 1000;
         currentSalaries = 50;
-        currentMarketSalary = 0.0f;
+        currentMarketSalary = 25.0f;
 
         TabletManager.Instance.InitPieChart(departments);
 
@@ -120,13 +120,42 @@ public class GameManager : SingletonBase<GameManager>
                 // Handled in ResumeManager
             } break;
             case JOB_DEPARTMENT.MARKETING: {
-                currentProfits += 5 * currentSalaries;
+                if (Mathf.Abs(departments[(int)JOB_DEPARTMENT.MARKETING] + currentDemand - departments[(int)JOB_DEPARTMENT.PRODUCTION]) <= 1) {
+                    currentProfits += 5.0f * currentSalaries;
+                    if (currentProfits > 5.0f * currentSalaries) {
+                        currentProfits = 5.0f * currentSalaries;
+                    }
+                } else if (Mathf.Abs(departments[(int)JOB_DEPARTMENT.MARKETING] + currentDemand - departments[(int)JOB_DEPARTMENT.PRODUCTION]) <= 3) {
+                    currentProfits += 2.5f * currentSalaries;
+                    if (currentProfits > 2.5f * currentSalaries) {
+                        currentProfits = 2.5f * currentSalaries;
+                    }
+                } else {
+                    currentProfits -= currentSalaries;
+                }
             } break;
             case JOB_DEPARTMENT.PRODUCTION: {
-                currentProfits += 3 * currentSalaries;
+                if (Mathf.Abs(departments[(int)JOB_DEPARTMENT.MARKETING] + currentDemand - departments[(int)JOB_DEPARTMENT.PRODUCTION]) <= 1) {
+                    currentProfits += 5.0f * currentSalaries;
+                    if (currentProfits > 5.0f * currentSalaries) {
+                        currentProfits = 5.0f * currentSalaries;
+                    }
+                } else if (Mathf.Abs(departments[(int)JOB_DEPARTMENT.MARKETING] + currentDemand - departments[(int)JOB_DEPARTMENT.PRODUCTION]) <= 3) {
+                    currentProfits += 2.5f * currentSalaries;
+                    if (currentProfits > 2.5f * currentSalaries) {
+                        currentProfits = 2.5f * currentSalaries;
+                    }
+                } else {
+                    currentProfits -= currentSalaries;
+                }
             } break;
             case JOB_DEPARTMENT.QA: {
-                currentProfits += 1 * currentSalaries;
+                if (departments[(int)JOB_DEPARTMENT.MARKETING] + departments[(int)JOB_DEPARTMENT.PRODUCTION] > 2 * departments[(int)JOB_DEPARTMENT.QA]) {
+                    currentProfits += 2.0f * currentSalaries;
+                    if (currentProfits > 2.5f * currentSalaries) {
+                        currentProfits = 2.5f * currentSalaries;
+                    }
+                }
             } break;
             case JOB_DEPARTMENT.FINANCE: {
                 
@@ -146,8 +175,6 @@ public class GameManager : SingletonBase<GameManager>
     }
 
     void UpdateFinances() {
-float profit = 0;
-
         switch (currentYear)
         {
             case 0:
