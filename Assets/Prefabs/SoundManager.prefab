@@ -81,22 +81,22 @@ MonoBehaviour:
     m_HearingBaseOnDist: 0
     m_Loop: 0
     m_Source: {fileID: 0}
-  - m_Name: 
-    m_Clip: {fileID: 0}
+  - m_Name: Correct
+    m_Clip: {fileID: 8300000, guid: 30ede1a13b8171a41b8b721be1f914a3, type: 3}
     m_Volume: 0
     m_Pitch: 0
     m_HearingBaseOnDist: 0
     m_Loop: 0
     m_Source: {fileID: 0}
-  - m_Name: 
-    m_Clip: {fileID: 0}
+  - m_Name: Fart
+    m_Clip: {fileID: 8300000, guid: 6ccf78c1f857d2f4e85f883c182f47bd, type: 3}
     m_Volume: 0
     m_Pitch: 0
     m_HearingBaseOnDist: 0
     m_Loop: 0
     m_Source: {fileID: 0}
-  - m_Name: 
-    m_Clip: {fileID: 0}
+  - m_Name: Ticking
+    m_Clip: {fileID: 8300000, guid: 5c9c870412f55704fb016ed79df85140, type: 3}
     m_Volume: 0
     m_Pitch: 0
     m_HearingBaseOnDist: 0
