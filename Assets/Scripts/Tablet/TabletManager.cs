@@ -5,6 +5,7 @@ using TMPro;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 enum TabletState {Hidden, Hovering, Opened, TotalStates}
@@ -32,7 +33,7 @@ public struct savedUIObject
 /// <summary>
 /// This file will handle changing of screens
 /// </summary>
-public class TabletManager : SingletonBase<TabletManager>
+public class TabletManager : SingletonBase<TabletManager>, IPointerEnterHandler, IPointerExitHandler
 {
     public List<GameObject> tabletScreens;
     public List<Sprite> tabletSprites;
@@ -52,6 +53,8 @@ public class TabletManager : SingletonBase<TabletManager>
     Vector3 hoverPosition;
     Vector3 originalPosition;
     public Vector3 openPosition;
+    public Vector3 openScale;
+    public Vector3 closeScale;
 
     PieChart pieChartRef;
     Graph graphRef;
@@ -75,7 +78,7 @@ public class TabletManager : SingletonBase<TabletManager>
         currState = TabletState.Hidden;
         currScreen = Screens.Home;
         originalPosition = gameObject.GetComponent<Transform>().position;
-        hoverPosition = gameObject.GetComponent<Transform>().position + new Vector3(0, 0, hoverY);
+        hoverPosition = gameObject.GetComponent<Transform>().position + new Vector3(0, hoverY, 0);
         savedUIObjects = new List<savedUIObject>();
         //buttonOriginalTransforms = new List<RectTransform>();
 
@@ -96,45 +99,74 @@ public class TabletManager : SingletonBase<TabletManager>
             if (currState == TabletState.Hovering)
             {
                 currState = TabletState.Opened;
-                StartCoroutine(ToggleTablet(true, 0.5f));
+                StartCoroutine(ToggleTablet(true, 0.2f));
             }
             // If its not hovering and the tablet is open
             else if (isHovering == false && currState == TabletState.Opened)
             {
                 // Close the tablet
-                StartCoroutine(ToggleTablet(false, 0.5f));
+                StartCoroutine(ToggleTablet(false, 0.2f));
             }
         }
 
         if (currState == TabletState.Hovering && isHovering == false)
         {
             currState = TabletState.Hidden;
-            StartCoroutine(LerpPosition(originalPosition, 0.5f, this.transform));
+            StartCoroutine(LerpPosition(originalPosition, 0.2f, this.transform));
         }
     }
 
-    public void OnMouseEnter()
+    
+
+   // public void OnMouseEnter()
+    //{
+    //    Debug.Log("HOVERING OVER TABLET");
+    //    if(currState == TabletState.Hidden)
+    //    {
+    //        currState = TabletState.Hovering;
+    //        StartCoroutine(LerpPosition(hoverPosition, 0.5f, this.transform));
+    //    }
+
+    //    isHovering = true;
+    //}
+
+    public void OnPointerEnter(PointerEventData eventData)
     {
-        //Debug.Log("HOVERING OVER TABLET");
-        if(currState == TabletState.Hidden)
+        Debug.Log("HOVERING OVER TABLET");
+
+        if (currState == TabletState.Hidden)
         {
             currState = TabletState.Hovering;
-            StartCoroutine(LerpPosition(hoverPosition, 0.5f, this.transform));
+            StartCoroutine(LerpPosition(hoverPosition, 0.2f, this.transform));
         }
 
         isHovering = true;
+
     }
 
-    public void OnMouseExit()
+    public void OnPointerExit(PointerEventData eventData)
     {
+        Debug.Log("NOT HOVERING OVER TABLET");
         if (currState == TabletState.Hovering)
         {
             currState = TabletState.Hidden;
-            StartCoroutine(LerpPosition(originalPosition, 0.5f, this.transform));
+            StartCoroutine(LerpPosition(originalPosition, 0.2f, this.transform));
         }
 
         isHovering = false;
+
     }
+
+    //public void OnMouseExit()
+    //{
+    //    if (currState == TabletState.Hovering)
+    //    {
+    //        currState = TabletState.Hidden;
+    //        StartCoroutine(LerpPosition(originalPosition, 0.5f, this.transform));
+    //    }
+
+    //    isHovering = false;
+    //}
 
     public void ButtonPress(int screen)
     {
@@ -143,7 +175,7 @@ public class TabletManager : SingletonBase<TabletManager>
         if (screen != 0) // Only menu buttons going away from home screen has the scale effect
         {
             StartCoroutine(LerpRectPosition(new Vector3(0, 0, 0), 0.25f, tabletButtons[screen - 1].GetComponent<RectTransform>()));
-            StartCoroutine(LerpScale(new Vector3(4f, 4f, 0), 0.25f, tabletButtons[screen - 1].transform));
+            StartCoroutine(LerpScale(new Vector3(4.0f, 4.0f, 0), 0.25f, tabletButtons[screen - 1].transform));
             for (int i = 0; i < tabletButtons.Count; ++i)
             {
                 tabletButtons[i].GetComponent<Button>().enabled = false;
@@ -230,9 +262,9 @@ public class TabletManager : SingletonBase<TabletManager>
     {
         for (int i = 0; i < screenObjects[(int)Screens.Profile].uiObjects.Count; ++i)
         {
-            if (screenObjects[(int)currScreen].uiObjects[i].GetComponent<Button>() != null)
+            if (screenObjects[(int)Screens.Profile].uiObjects[i].GetComponent<Button>() != null)
             {
-                screenObjects[(int)currScreen].uiObjects[i].GetComponent<Button>().enabled = true;
+                screenObjects[(int)Screens.Profile].uiObjects[i].GetComponent<Button>().enabled = true;
             }
 
             StartCoroutine(FadeEffect(false, 0.3f, screenObjects[(int)Screens.Profile].uiObjects[i]));
@@ -326,24 +358,24 @@ public class TabletManager : SingletonBase<TabletManager>
             while (time < duration)
             {
                 transform.position = Vector3.Lerp(startPosition, openPosition, time / duration);
-                transform.localScale = Vector3.Lerp(startScale, new Vector3(1.4f, 1.4f, 0), time / duration);
+                transform.localScale = Vector3.Lerp(startScale, openScale, time / duration);
                 time += Time.deltaTime;
                 yield return null;
             }
             transform.position = openPosition;
-            transform.localScale = new Vector3(1.4f, 1.4f, 0);
+            transform.localScale = openScale;
         }
         else
         {
             while (time < duration)
             {
                 transform.position = Vector3.Lerp(startPosition, hoverPosition, time / duration);
-                transform.localScale = Vector3.Lerp(startScale, new Vector3(0.55f, 0.55f, 0), time / duration);
+                transform.localScale = Vector3.Lerp(startScale, closeScale, time / duration);
                 time += Time.deltaTime;
                 yield return null;
             }
             transform.position = hoverPosition;
-            transform.localScale = new Vector3(0.55f, 0.55f, 0);
+            transform.localScale = closeScale;
             currState = TabletState.Hovering;
         }
     }
@@ -352,7 +384,7 @@ public class TabletManager : SingletonBase<TabletManager>
     IEnumerator ScreenTransitionStart(int index, float duration)
     {
         float time = 0;
-        SpriteRenderer bgSprite = tabletBG.GetComponent<SpriteRenderer>();
+        Image bgSprite = tabletBG.GetComponent<Image>();
         //Color targetColor = new Color(0, 0, 0);
         //Color originalColor = new Color(255, 255, 255);
         while (time < duration)
@@ -375,7 +407,7 @@ public class TabletManager : SingletonBase<TabletManager>
     IEnumerator ScreenTransitionEnd(int index, float duration)
     {
         float time = 0;
-        SpriteRenderer bgSprite = tabletBG.GetComponent<SpriteRenderer>();
+        Image bgSprite = tabletBG.GetComponent<Image>();
         //Color targetColor = new Color(0, 0, 0);
         //Color originalColor = new Color(255, 255, 255);
         while (time < duration)

@@ -13,14 +13,14 @@ public class PieChart : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-       // SetValues(values);
+        SetValues(values);
     }
 
     // Update is called once per frame
     void Update()
     {
         // For testing
-        //SetValues(values);
+        SetValues(values);
     }
 
     /// <summary>
