@@ -1,0 +1,191 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5912396389661027621
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5912396389661027618}
+  - component: {fileID: 5912396389661027619}
+  m_Layer: 0
+  m_Name: ResumeData
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5912396389661027618
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5912396389661027621}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5912396389661027619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5912396389661027621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86d85b976448a9949882820313df18f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Names:
+  - Johnny Smash
+  - Royce Philip
+  - Writer Joe
+  - Josh White
+  - Red Ross
+  - Mabel Pines
+  - Dipper Pines
+  - Polar Caps
+  - Lize Knows
+  - Voldermort
+  - Philip Jose
+  - Lotus Oak
+  - Kito Minato
+  - Gary Oka
+  - Sonia Rose
+  - Steven Rose
+  - Dipper Pines
+  - Marco Diaz
+  - Nate Muse
+  - Arial Waters
+  - Haru Imai
+  m_ExpertHr:
+  - Several years of experience working at top companies. Replies fast and known
+    to care deeply about the candidates that she is responsible for.
+  - 'Graduated from Stanford University at the top of his cohort two years ago. Worked
+    at TokTik after graduating and seeking new opportunities to grow. '
+  - Only has a high school degree from his country side home. However, mentored directly
+    under the CEO of BookFace and worked with numerous people throughout his career.
+  m_MediumHr:
+  - Just graduated from a state University. Has done 2 internships. One at a startup
+    and the other at Oogle. Eager to learn and seems great at talking.
+  - Work for 2 years at a startup company that has done relatively well over the
+    years. Relatively good at communication and emails are polite. However, there
+    seems to be some slight language barrier.
+  - Have over 5 years of work experiene at 2 comapnies. Decided to change jobs as
+    she was passed over for promotion after she got pregnant.
+  m_BadHr:
+  - Over 10 years of experience at many companies. Companies range from small startups
+    to large companies such as TweetX. The longest he stayed at a company is a year
+    as they did not suite him. He is optimistic he will be better suited for out
+    comapny.
+  - Just graduated from University. Has done 0 internships but has decently high
+    grades. Reasoning for not doing internship was to concentrate on studies.
+  - 'Over 10 years of experience at many reknown companies oversees. Very qualified.
+    However, there seems to be a huge language barrier. '
+  m_ExpertMarketing:
+  - Just graduated from Oxford University. Took a 3 year gap year after high school
+    to start her own Coffee company which was values at half a million.
+  - Did not graduate high school. However, have experience working at various companies
+    and a portfolio that includes working on a WacDonalds campaign that greatly increased
+    sales.
+  - 20 years of experience in this field. Graduated from an off-state university.
+    Worked on many marketing campaigns that did relatively well in driving sales.
+  m_MediumMarketing:
+  - 15 years of experience in this field.Have worked on various small-scale campaigns
+    and was a freelancer for a while.
+  - Graduated from an off-state university and was the exco of his club. Frequently
+    helped with planning events, grabbing sponsors and advertising. Have no internships
+    as he was competing in Nation-wide competitions.
+  - Just graduated from her university and has 3 internships under her belt. At her
+    previous internship, she was in charge of making monthly pitch decks for her
+    team.
+  m_BadMarketing:
+  - 2 years of experience in this field. Helped with food research and testing sanitary
+    cleaniness in a tech company. Significantly contributed to the sales of food
+    within the employees.
+  - Have worked for over 15 years at various companies as a programmer. Recently
+    obtained a marketing certificate and would like to make a career switch.
+  - 10 years of working experience. Skill set involved microsoft powerpoint and sheets.
+    Able to communicate well. Portfolio shows 3 projects of varrying scale and success.
+  m_ExpertQA:
+  - 'Lead QA in his previous company, Pear, and was in charge of finding bugs for
+    the  applications on iPear. Pear was his first company after graduating high
+    school where he worked for 3 years. '
+  - QA for multiple software companies including Rito Games, UbiHard and HeloVerse.
+    Mostly tested software and interactive games. Detail oriented.
+  - Just graduated from a programming course from an off-state university. Very well-verse
+    in tech and detailed oriented. Knows the company's product very well and told
+    the interviewers about the bugs found and potential fixes.
+  m_MediumQA:
+  - 'Was the sole QA for a small indie company that recently released their game.
+    Helped in the documentation and bug fixing. '
+  - Interned as a QA tester and developed testing reports for a startup company.
+  - Located numerous bugs and did documentation as a QA tester for a local game company.
+  m_BadQA:
+  - 'Lead QA for a company he started. '
+  - Just graduated but went for 5 internships at small start ups. 20 years of experience.
+  - Assisted and ensured the quality of the product of a company. Recieved an offer
+    after interning for a company but rejected due to being busy with various affairs
+    in life.
+  m_ExpertFINANCE:
+  - Handled day to day duties in financial aid in colleges for over 10,000 students
+    over the course of 4 years. Presented live seminars on financial aid in multiple
+    university campuses.
+  - Excels in analyses and management of financial trends and able to advise on business
+    improvement strategies. Prepared monthly advances and exception reports for senior
+    management as a financial coordinator.
+  - An Experienced bank teller passionate about helping customers navigate their
+    finances. Prepared financial summaries, forecasts and analyses for higher management
+    in OOBC.
+  m_MediumFINANCE:
+  - Executed customer transactions while prioritizing the customer experience. Managed
+    cash transactions and funds between accounts.
+  - Interned as a financial accountant. Assisted organizational leadership with purchase
+    orders and audits.
+  - Maintained confidentiality between bank records and sevn priority clients as
+    a junior financial advisor.
+  m_BadFINANCE:
+  - I've made an app that gives you crypto and NFT paybacks for your purchases. Have
+    you used credit card rewards? It's like that, but you get crypto instead.
+  - I have developed a Machine Learning model to track the financial values of certain
+    metrics in the economy in order to facilitate insider trading.
+  - 'Over 10 years of self-learning experience. Have Invested in a lot of stocks
+    like GameStop and Bitcoins. '
+  m_ExpertRESEARCH:
+  - PHD student who was working on new interactions that can be made with the disabled
+    and VR.
+  - Wrote multiple papers on technology with varying success. Not very well known
+    as the papers are written in very niche fields.
+  m_MediumRESEARCH:
+  - Graduated with a degree on biology. Have wrote a paper as his final year project
+    on the future of biotech but was lacking in execution.
+  - 'Partner with multiple people when it comes to writing research papers. '
+  m_BadRESEARCH:
+  - Great at research modules in university. Was able to create convincing pitch
+    slides with detailed research. Numbers seems weird.
+  - 10 years of experience in security and written documentation on his work.
+  m_ExpertSECURITY:
+  - Known as a white hat hacker that has found numerous vulnerabilities for various
+    companies.
+  - 'Was arrested years ago for exploiting a state vulnerability that could have
+    damaged the country''s security. '
+  - Created and implemented multiple firewalls and security systems for various companies
+    with an experience of over 20 years.
+  m_MediumSECURITY:
+  - 5 Years of experience working as a security engineer on the backend servers for
+    his company. Was promoted to senior in 4 years.
+  - Just graduated from university. Won numerous national capture the flag competitions
+    and was part of his school grey hats team.
+  m_BadSECURITY:
+  - Paritipated in 2 Capture the flag competitions and have a certificate in Security
+    earned from an online course over 3 months.
+  - Worked security for infamous pizzaria with multiple megatronics and animatronics.
+    Famous for surviving through the night and the longest lasting employee.

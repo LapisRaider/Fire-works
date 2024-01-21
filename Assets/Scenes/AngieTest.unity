@@ -1370,13 +1370,38 @@ MonoBehaviour:
     you used credit card rewards? It's like that, but you get crypto instead.
   - I have developed a Machine Learning model to track the financial values of certain
     metrics in the economy in order to facilitate insider trading.
-  - 
-  m_ExpertRESEARCH: []
-  m_MediumRESEARCH: []
-  m_BadRESEARCH: []
-  m_ExpertSECURITY: []
-  m_MediumSECURITY: []
-  m_BadSECURITY: []
+  - 'Over 10 years of self-learning experience. Have Invested in a lot of stocks
+    like GameStop and Bitcoins. '
+  m_ExpertRESEARCH:
+  - PHD student who was working on new interactions that can be made with the disabled
+    and VR.
+  - Wrote multiple papers on technology with varying success. Not very well known
+    as the papers are written in very niche fields.
+  m_MediumRESEARCH:
+  - Graduated with a degree on biology. Have wrote a paper as his final year project
+    on the future of biotech but was lacking in execution.
+  - 'Partner with multiple people when it comes to writing research papers. '
+  m_BadRESEARCH:
+  - Great at research modules in university. Was able to create convincing pitch
+    slides with detailed research. Numbers seems weird.
+  - 10 years of experience in security and written documentation on his work.
+  m_ExpertSECURITY:
+  - Known as a white hat hacker that has found numerous vulnerabilities for various
+    companies.
+  - 'Was arrested years ago for exploiting a state vulnerability that could have
+    damaged the country''s security. '
+  - Created and implemented multiple firewalls and security systems for various companies
+    with an experience of over 20 years.
+  m_MediumSECURITY:
+  - 5 Years of experience working as a security engineer on the backend servers for
+    his company. Was promoted to senior in 4 years.
+  - Just graduated from university. Won numerous national capture the flag competitions
+    and was part of his school grey hats team.
+  m_BadSECURITY:
+  - Paritipated in 2 Capture the flag competitions and have a certificate in Security
+    earned from an online course over 3 months.
+  - Worked security for infamous pizzaria with multiple megatronics and animatronics.
+    Famous for surviving through the night and the longest lasting employee.
 --- !u!1 &2087928551
 GameObject:
   m_ObjectHideFlags: 0
