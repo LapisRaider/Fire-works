@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -15,8 +16,10 @@ public class ResumeUI
 
     public void Initialize(Candidate data)
     {
-        m_Name.text = data.Name;
-        m_Description.text = data.Description;
+        m_Name.text = ResumeDescriptionData.Instance.m_Names[UnityEngine.Random.Range(0, ResumeDescriptionData.Instance.m_Names.Count)];
+
+        List<string> expertise = ResumeDescriptionData.Instance.jobs[(int)data.m_Department].m_expertiseLevels[data.ExpertiseLevel];
+        m_Description.text = expertise[UnityEngine.Random.Range(0, expertise.Count)];
         m_CandidateType.text = Candidate.DEPARTMENT_TEXT[data.m_Department];
 
         if (m_CurrImgData != null)
