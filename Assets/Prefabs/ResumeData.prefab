@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d85b976448a9949882820313df18f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bDontDestroyOnLoad: 0
   m_Names:
   - Johnny Smash
   - Royce Philip
