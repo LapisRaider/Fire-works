@@ -10,6 +10,7 @@ public class EventObject
 {
     public bool delayed;
     public string eventText;
+    [System.NonSerialized] public JOB_DEPARTMENT targetDepartment;
 
 }
 
@@ -63,6 +64,13 @@ public class EventReader : MonoBehaviour
                     textObj.text = initialStr;
                     if (activeEvent != null && activeEvent.delayed == false)
                     {
+                        // If the event belongs to research
+                        if (activeEvent.targetDepartment == JOB_DEPARTMENT.RESEARCH)
+                        {
+                            GameManager.Instance.currentMoney *= 1.5f;
+
+                        }
+
                         activeEvent = null;
                     }
                 }
@@ -87,6 +95,14 @@ public class EventReader : MonoBehaviour
             else if (GameManager.Instance.currentMonth == 4 && GameManager.Instance.currentQuarter == 0)
             {
                 TriggerEvent(JOB_DEPARTMENT.SECURITY);
+            }
+
+            float breakthroughChance = Mathf.Clamp(1 / (1 + Mathf.Pow(1.2f, 10 - GameManager.Instance.departments[(int)JOB_DEPARTMENT.RESEARCH])), 0.0f, 1.0f);
+            float r = UnityEngine.Random.Range(0.0f, 1.0f);
+            if (r <= breakthroughChance)
+            {
+                // Succeed
+                TriggerEvent(JOB_DEPARTMENT.RESEARCH);
             }
         }
 

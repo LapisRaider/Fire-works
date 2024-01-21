@@ -60,13 +60,13 @@ public class ResumeManager : SingletonBase<ResumeManager>
 
         if (GameManager.Instance.currentYear == 0) {
             candidate.m_Department = (JOB_DEPARTMENT)Random.Range((int)JOB_DEPARTMENT.HR, (int)JOB_DEPARTMENT.FINANCE);
-            candidate.ExpertiseLevel = 0;
+            candidate.ExpertiseLevel = (int)Random.Range(1, 3);
         } else if (GameManager.Instance.currentYear == 1) {
             candidate.m_Department = (JOB_DEPARTMENT)Random.Range((int)JOB_DEPARTMENT.HR, (int)JOB_DEPARTMENT.RESEARCH);
-            candidate.ExpertiseLevel = 0;
+            candidate.ExpertiseLevel = (int)Random.Range(1, 3);
         } else if (GameManager.Instance.currentYear == 2) {
             candidate.m_Department = (JOB_DEPARTMENT)Random.Range((int)JOB_DEPARTMENT.HR, (int)JOB_DEPARTMENT.TOTAL_DEPARTMENTS);
-            candidate.ExpertiseLevel = 0;
+            candidate.ExpertiseLevel = (int)Random.Range(1, 3);
         } else {
             candidate.m_Department = (JOB_DEPARTMENT)Random.Range((int)JOB_DEPARTMENT.HR, (int)JOB_DEPARTMENT.TOTAL_DEPARTMENTS);
             candidate.ExpertiseLevel = (int)Random.Range(0, 3);

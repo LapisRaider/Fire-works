@@ -35,20 +35,13 @@ public class GameManager : SingletonBase<GameManager>
     // Stock graph variables
     public float currentMoney;
     public float currentMarketSalary;
-    public float currentPrice;
-    public float currentCost;
-    public float currentSupply;
     public float currentDemand;
     public float currentProfits;
     public float currentSalaries;
-    
-    // Negative events
-    public float demandLossRate; // How much of demand is lost over time
-    public float resignationRate;
+
+    public int numBadHires;
 
     // Misc events variables
-    public float breakthroughChance;
-
     public delegate void OnNewMonth();
     
     public static event OnNewMonth onNewMonth = null;
@@ -79,6 +72,7 @@ public class GameManager : SingletonBase<GameManager>
 
         TabletManager.Instance.InitPieChart(departments);
 
+        numBadHires = 0;
     }
 
     // Update is called once per frame
@@ -108,9 +102,32 @@ public class GameManager : SingletonBase<GameManager>
     void EndOfYearUpdate() {
         // TODO: Transition to boss
         currentYear++;
+
+        if (currentYear == 4) {
+            bossStrings = new string[3]{ "It's a tadpole's turn of events but your lilypad days here are over.", "But worry not! I've penned a croak-tastic recommendation to spice up your next jump.", "Keep on hopping and making waves!" };
+        }
+
+        if (currentMoney > 3000) {
+            bossStrings = new string[3]{ "Jumpin' jellybugs!", "Your outstanding dedication and hard work have sent our sales soaring to new heights!", "Keep leaping forward, and let's ride this wave of success together!" };
+        } else if (currentMoney > 1000) {
+            bossStrings = new string[3]{ "Hoppy news!", "Your commitment to improvement hasn't gone unnoticed, and I appreciate your perseverance!", "Keep paddling, keep croaking, and soon you'll be making waves in our pond." };
+        } else {
+            bossStrings = new string[3]{ "I've noticed a bit of pond stagnation lately.", "We're in a pond, not a snooze-fest!", "Enough with the sluggishness it's time to leap!" };
+        }
+        SceneManager.LoadScene("FiredScene");
     }
 
-    public void Hire(float _hiringCost, JOB_DEPARTMENT _department) {
+    public void Hire(float _hiringCost, JOB_DEPARTMENT _department, int _level) {
+        if (_level == 0) { 
+            numBadHires++; 
+            if (numBadHires == 10) {
+                // Too many bad apples, CEO not happy
+                bossStrings = new string[3]{ "This is unacceptable!", "Our once-harmonious swamp is now overrun with the cacophony of bad apples!", "Consider this your untimely departure from our froggy realm!" };
+                SceneManager.LoadScene("FiredScene");
+            }
+        }
+
+
         departments[(int)_department] += 1;
         currentMoney -= _hiringCost;
         currentSalaries += _hiringCost + currentMarketSalary;
@@ -122,58 +139,60 @@ public class GameManager : SingletonBase<GameManager>
                 // Handled in ResumeManager
             } break;
             case JOB_DEPARTMENT.MARKETING: {
-                if (Mathf.Abs(departments[(int)JOB_DEPARTMENT.MARKETING] + currentDemand - departments[(int)JOB_DEPARTMENT.PRODUCTION]) <= 1) {
-                    currentProfits += 5.0f * currentSalaries;
-                    if (currentProfits > 5.0f * currentSalaries) {
-                        currentProfits = 5.0f * currentSalaries;
-                    }
-                } else if (Mathf.Abs(departments[(int)JOB_DEPARTMENT.MARKETING] + currentDemand - departments[(int)JOB_DEPARTMENT.PRODUCTION]) <= 3) {
-                    currentProfits += 2.5f * currentSalaries;
+                if (departments[(int)JOB_DEPARTMENT.MARKETING] + currentDemand - departments[(int)JOB_DEPARTMENT.PRODUCTION] >= 3) {
+                    currentProfits -= currentSalaries * ((_level - 1) * -0.2f + 1.0f);
+                } else if (departments[(int)JOB_DEPARTMENT.MARKETING] + currentDemand - departments[(int)JOB_DEPARTMENT.PRODUCTION] >= 0) {
+                    currentProfits += 2.5f * currentSalaries * ((_level - 1) * 0.2f + 1.0f);
                     if (currentProfits > 2.5f * currentSalaries) {
                         currentProfits = 2.5f * currentSalaries;
                     }
                 } else {
-                    currentProfits -= currentSalaries;
+                    currentProfits += 5.0f * currentSalaries * ((_level - 1) * 0.2f + 1.0f);
+                    if (currentProfits > 5.0f * currentSalaries) {
+                        currentProfits = 5.0f * currentSalaries;
+                    }
                 }
             } break;
             case JOB_DEPARTMENT.PRODUCTION: {
-                if (Mathf.Abs(departments[(int)JOB_DEPARTMENT.MARKETING] + currentDemand - departments[(int)JOB_DEPARTMENT.PRODUCTION]) <= 1) {
-                    currentProfits += 5.0f * currentSalaries;
-                    if (currentProfits > 5.0f * currentSalaries) {
-                        currentProfits = 5.0f * currentSalaries;
-                    }
-                } else if (Mathf.Abs(departments[(int)JOB_DEPARTMENT.MARKETING] + currentDemand - departments[(int)JOB_DEPARTMENT.PRODUCTION]) <= 3) {
-                    currentProfits += 2.5f * currentSalaries;
+                if (departments[(int)JOB_DEPARTMENT.PRODUCTION] - currentDemand - departments[(int)JOB_DEPARTMENT.MARKETING] >= 3) {
+                    currentProfits -= currentSalaries * ((_level - 1) * -0.2f + 1.0f);
+                } else if (departments[(int)JOB_DEPARTMENT.PRODUCTION] - currentDemand - departments[(int)JOB_DEPARTMENT.MARKETING] >= 0) {
+                    currentProfits += 2.5f * currentSalaries * ((_level - 1) * 0.2f + 1.0f);
                     if (currentProfits > 2.5f * currentSalaries) {
                         currentProfits = 2.5f * currentSalaries;
                     }
                 } else {
-                    currentProfits -= currentSalaries;
+                    currentProfits += 5.0f * currentSalaries * ((_level - 1) * 0.2f + 1.0f);
+                    if (currentProfits > 5.0f * currentSalaries) {
+                        currentProfits = 5.0f * currentSalaries;
+                    }
                 }
             } break;
             case JOB_DEPARTMENT.QA: {
                 if (departments[(int)JOB_DEPARTMENT.MARKETING] + departments[(int)JOB_DEPARTMENT.PRODUCTION] > 2 * departments[(int)JOB_DEPARTMENT.QA]) {
-                    currentProfits += 2.0f * currentSalaries;
+                    currentProfits += 2.0f * currentSalaries * ((_level - 1) * 0.2f + 1.0f);
                     if (currentProfits > 2.5f * currentSalaries) {
                         currentProfits = 2.5f * currentSalaries;
                     }
                 }
             } break;
             case JOB_DEPARTMENT.FINANCE: {
-                
+                if (currentSalaries < 0) {
+                    currentSalaries *= 0.67f * ((_level - 1) * 0.2f + 1.0f);
+                } else if (currentProfits < currentSalaries * 4) {
+                    currentProfits *= 1.67f * currentProfits * ((_level - 1) * 0.2f + 1.0f);
+                }
             } break;
             case JOB_DEPARTMENT.RESEARCH: {
-                // TODO
             } break;
             case JOB_DEPARTMENT.SECURITY: {
-                // TODO
             } break;
 
             default: break;
         }
     }
     public void Hire(Candidate _candidate) {
-        Hire(_candidate.Salary, _candidate.m_Department);
+        Hire(_candidate.Salary, _candidate.m_Department, _candidate.ExpertiseLevel);
     }
 
     void UpdateFinances() {
@@ -187,19 +206,32 @@ public class GameManager : SingletonBase<GameManager>
             } break;
             case 1:
             {
-
+                if (currentMonth >= 2) {
+                    currentDemand -= 0.25f;
+                }
             } break;
             case 2:
             {
-
+                if (currentMonth >= 1) {
+                    currentDemand -= 0.25f;
+                }
+                if (currentMonth >= 3) {
+                    currentMarketSalary += 25.0f;
+                }
             } break;
             case 3:
             {
-
+                if (currentMonth >= 1) {
+                    currentDemand -= 0.25f;
+                }
+                if (currentMonth >= 1) {
+                    currentMarketSalary += 25.0f;
+                }
             } break;
             case 4:
             {
-
+                currentMarketSalary += 25.0f;
+                currentDemand -= 0.25f;                
             } break;
             default: break;
         }
@@ -211,7 +243,7 @@ public class GameManager : SingletonBase<GameManager>
         TabletManager.Instance.AddPointToGraph((int)currentMoney);
 
         if (currentMoney <= 0) {
-            // TODO:Profits decrease heavily, CEO not happy
+            // No more money, CEO not happy
             bossStrings = new string[3]{ "Listen up bucko.", "Your financial acrobatics have turned our thriving swamp into a muck-filled disaster!", "Consider this your leap of shame and get out of my office!" };
             SceneManager.LoadScene("FiredScene");
         }

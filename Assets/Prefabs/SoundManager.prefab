@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8093993755638318079
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7696111900865049846}
+  - component: {fileID: 8010223768662813874}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7696111900865049846
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8093993755638318079}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 902.0205, y: 712.529, z: -6.0713134}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8010223768662813874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8093993755638318079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56976146ad0a63c41ae7fa3505754913, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bDontDestroyOnLoad: 0
+  m_SoundClipList:
+  - m_Name: BGMusic
+    m_Clip: {fileID: 8300000, guid: 7a3ca87f128a02a4699c47cc52aaddf4, type: 3}
+    m_Volume: 0.457
+    m_Pitch: 0
+    m_HearingBaseOnDist: 0
+    m_Loop: 0
+    m_Source: {fileID: 0}
+  - m_Name: MouseClick
+    m_Clip: {fileID: 8300000, guid: b792fbca19f95d7478e37698ff8ef1f5, type: 3}
+    m_Volume: 0.531
+    m_Pitch: 0
+    m_HearingBaseOnDist: 0
+    m_Loop: 0
+    m_Source: {fileID: 0}
+  - m_Name: PickUp
+    m_Clip: {fileID: 8300000, guid: abb6d47edfd5da34ab19e77f4c47b85d, type: 3}
+    m_Volume: 0.539
+    m_Pitch: 0
+    m_HearingBaseOnDist: 0
+    m_Loop: 0
+    m_Source: {fileID: 0}
+  - m_Name: Stamp
+    m_Clip: {fileID: 8300000, guid: f1105d1b6ffa7cb46a366bf067770418, type: 3}
+    m_Volume: 0.523
+    m_Pitch: 0
+    m_HearingBaseOnDist: 0
+    m_Loop: 0
+    m_Source: {fileID: 0}
+  - m_Name: ThrowPaper
+    m_Clip: {fileID: 8300000, guid: 758c58d62ec0cc64083218687af4d708, type: 3}
+    m_Volume: 0.532
+    m_Pitch: 0
+    m_HearingBaseOnDist: 0
+    m_Loop: 0
+    m_Source: {fileID: 0}
+  - m_Name: Correct
+    m_Clip: {fileID: 8300000, guid: 30ede1a13b8171a41b8b721be1f914a3, type: 3}
+    m_Volume: 0
+    m_Pitch: 0
+    m_HearingBaseOnDist: 0
+    m_Loop: 0
+    m_Source: {fileID: 0}
+  - m_Name: Fart
+    m_Clip: {fileID: 8300000, guid: 6ccf78c1f857d2f4e85f883c182f47bd, type: 3}
+    m_Volume: 0
+    m_Pitch: 0
+    m_HearingBaseOnDist: 0
+    m_Loop: 0
+    m_Source: {fileID: 0}
+  - m_Name: Ticking
+    m_Clip: {fileID: 8300000, guid: 5c9c870412f55704fb016ed79df85140, type: 3}
+    m_Volume: 0
+    m_Pitch: 0
+    m_HearingBaseOnDist: 0
+    m_Loop: 0
+    m_Source: {fileID: 0}
