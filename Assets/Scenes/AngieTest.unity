@@ -1340,15 +1340,37 @@ MonoBehaviour:
   m_MediumQA:
   - 'Was the sole QA for a small indie company that recently released their game.
     Helped in the documentation and bug fixing. '
-  - 
-  - 
+  - Interned as a QA tester and developed testing reports for a startup company.
+  - Located numerous bugs and did documentation as a QA tester for a local game company.
   m_BadQA:
   - 'Lead QA for a company he started. '
   - Just graduated but went for 5 internships at small start ups. 20 years of experience.
+  - Assisted and ensured the quality of the product of a company. Recieved an offer
+    after interning for a company but rejected due to being busy with various affairs
+    in life.
+  m_ExpertFINANCE:
+  - Handled day to day duties in financial aid in colleges for over 10,000 students
+    over the course of 4 years. Presented live seminars on financial aid in multiple
+    university campuses.
+  - Excels in analyses and management of financial trends and able to advise on business
+    improvement strategies. Prepared monthly advances and exception reports for senior
+    management as a financial coordinator.
+  - An Experienced bank teller passionate about helping customers navigate their
+    finances. Prepared financial summaries, forecasts and analyses for higher management
+    in OOBC.
+  m_MediumFINANCE:
+  - Executed customer transactions while prioritizing the customer experience. Managed
+    cash transactions and funds between accounts.
+  - Interned as a financial accountant. Assisted organizational leadership with purchase
+    orders and audits.
+  - Maintained confidentiality between bank records and sevn priority clients as
+    a junior financial advisor.
+  m_BadFINANCE:
+  - I've made an app that gives you crypto and NFT paybacks for your purchases. Have
+    you used credit card rewards? It's like that, but you get crypto instead.
+  - I have developed a Machine Learning model to track the financial values of certain
+    metrics in the economy in order to facilitate insider trading.
   - 
-  m_ExpertFINANCE: []
-  m_MediumFINANCE: []
-  m_BadFINANCE: []
   m_ExpertRESEARCH: []
   m_MediumRESEARCH: []
   m_BadRESEARCH: []
