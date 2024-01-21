@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -105,6 +104,8 @@ public class Graph : MonoBehaviour
         {
             xPosition = xScale + listOfCircles.Count * xScale;
             yPosition = (Point / yMax) * graphHeight;
+            yPosition = Mathf.Clamp(yPosition, 0, graphHeight);
+
             GameObject newCircle = CreateCircle(new Vector2(xPosition, yPosition));
             listOfCircles.Add(newCircle);
         }
@@ -124,6 +125,7 @@ public class Graph : MonoBehaviour
 
             xPosition = listOfCircles[listOfCircles.Count - 1].GetComponent<RectTransform>().anchoredPosition.x;
             yPosition = (Point / yMax) * graphHeight;
+            yPosition = Mathf.Clamp(yPosition, 0, graphHeight);
             GameObject newCircle = CreateCircle(new Vector2(xPosition, yPosition));
 
             Destroy(listOfCircles[listOfCircles.Count - 1]);
