@@ -16,15 +16,17 @@ public class DateChanger : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.Instance.currentMonth < 9)
+        int a = 11 - GameManager.Instance.currentMonth;
+
+        if (a <= 9)
         {
             Tens.text = "0";
-            Ones.text = (GameManager.Instance.currentMonth + 1).ToString();
+            Ones.text = (a).ToString();
         }
         else
         {
             Tens.text = "1";
-            Ones.text = ((GameManager.Instance.currentMonth + 1) - 10).ToString();
+            Ones.text = (a - 10).ToString();
         }
     }
 }
