@@ -81,9 +81,9 @@ public class GameManager : SingletonBase<GameManager>
         departments[(int)JOB_DEPARTMENT.RESEARCH] = 0;
         departments[(int)JOB_DEPARTMENT.SECURITY] = 0;
         
-        currentMoney = 1000;
-        currentSalaries = 50;
-        currentMarketSalary = 25.0f;
+        currentMoney = 10000;
+        currentSalaries = 40;
+        currentMarketSalary = 15.0f;
         numBadHires = 0;
 
         Refresh();

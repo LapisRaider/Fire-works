@@ -21,12 +21,6 @@ public struct savedUIObject
 {
     public Vector3 originalPosition;
     public Vector3 originalScale;
-
-    //public savedUIObject()
-    //{
-    //    originalPosition = new Vector3(0, 0, 0);
-    //    originalScale = new Vector3(0, 0, 0);
-    //}
 }
 
 
@@ -68,22 +62,20 @@ public class TabletManager : SingletonBase<TabletManager>, IPointerEnterHandler,
     public TextMeshProUGUI helpText;
 
     public List<savedUIObject> savedUIObjects;
-   // public List<RectTransform> buttonOriginalTransforms;
 
     override public void Awake()
     {
         base.Awake();
-        pieChartRef = GetComponent<PieChart>();
-        graphRef = GetComponent<Graph>();
+        pieChartRef = GetComponentInChildren<PieChart>();
+        graphRef = GetComponentInChildren<Graph>();
     }
     void Start()
     {
         currState = TabletState.Hidden;
         currScreen = Screens.Home;
-        originalPosition = gameObject.GetComponent<Transform>().position;
-        hoverPosition = gameObject.GetComponent<Transform>().position + new Vector3(0, hoverY, 0);
+        originalPosition = tabletImage.GetComponent<Transform>().position;
+        hoverPosition = tabletImage.GetComponent<Transform>().position + new Vector3(0, hoverY, 0);
         savedUIObjects = new List<savedUIObject>();
-        //buttonOriginalTransforms = new List<RectTransform>();
 
         for (int i = 0; i < tabletButtons.Count; ++i)
         {
@@ -115,7 +107,7 @@ public class TabletManager : SingletonBase<TabletManager>, IPointerEnterHandler,
         if (currState == TabletState.Hovering && isHovering == false)
         {
             currState = TabletState.Hidden;
-            StartCoroutine(LerpPosition(originalPosition, 0.2f, this.transform));
+            StartCoroutine(LerpPosition(originalPosition, 0.2f, tabletImage.transform));
         }
     }
 
@@ -127,7 +119,7 @@ public class TabletManager : SingletonBase<TabletManager>, IPointerEnterHandler,
         if (currState == TabletState.Hidden)
         {
             currState = TabletState.Hovering;
-            StartCoroutine(LerpPosition(hoverPosition, 0.2f, this.transform));
+            StartCoroutine(LerpPosition(hoverPosition, 0.2f, tabletImage.transform));
         }
 
         isHovering = true;
@@ -140,7 +132,7 @@ public class TabletManager : SingletonBase<TabletManager>, IPointerEnterHandler,
         if (currState == TabletState.Hovering)
         {
             currState = TabletState.Hidden;
-            StartCoroutine(LerpPosition(originalPosition, 0.2f, this.transform));
+            StartCoroutine(LerpPosition(originalPosition, 0.2f, tabletImage.transform));
         }
 
         isHovering = false;
@@ -349,31 +341,31 @@ public class TabletManager : SingletonBase<TabletManager>, IPointerEnterHandler,
     IEnumerator ToggleTablet(bool toggle, float duration)
     {
        float time = 0;
-       Vector3 startPosition = transform.position;
-       Vector3 startScale = transform.localScale;
+       Vector3 startPosition = tabletImage.transform.position;
+       Vector3 startScale = tabletImage.transform.localScale;
         if (toggle)
         {
             while (time < duration)
             {
-                transform.position = Vector3.Lerp(startPosition, openPosition, time / duration);
-                transform.localScale = Vector3.Lerp(startScale, openScale, time / duration);
+                tabletImage.transform.position = Vector3.Lerp(startPosition, openPosition, time / duration);
+                tabletImage.transform.localScale = Vector3.Lerp(startScale, openScale, time / duration);
                 time += Time.deltaTime;
                 yield return null;
             }
-            transform.position = openPosition;
-            transform.localScale = openScale;
+            tabletImage.transform.position = openPosition;
+            tabletImage.transform.localScale = openScale;
         }
         else
         {
             while (time < duration)
             {
-                transform.position = Vector3.Lerp(startPosition, hoverPosition, time / duration);
-                transform.localScale = Vector3.Lerp(startScale, closeScale, time / duration);
+                tabletImage.transform.position = Vector3.Lerp(startPosition, hoverPosition, time / duration);
+                tabletImage.transform.localScale = Vector3.Lerp(startScale, closeScale, time / duration);
                 time += Time.deltaTime;
                 yield return null;
             }
-            transform.position = hoverPosition;
-            transform.localScale = closeScale;
+            tabletImage.transform.position = hoverPosition;
+            tabletImage.transform.localScale = closeScale;
             currState = TabletState.Hovering;
         }
     }

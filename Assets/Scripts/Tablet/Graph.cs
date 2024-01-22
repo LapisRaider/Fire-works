@@ -38,6 +38,7 @@ public class Graph : MonoBehaviour
         //ShowGraph(valList);
         //CreateCircle(new Vector2(15, 25));
         InitializeGraph(initialList);
+
     }
 
     GameObject CreateCircle(Vector2 anchoredPosition)
@@ -72,7 +73,8 @@ public class Graph : MonoBehaviour
                     xPosition = 0;
                 }
                 float yPosition = (list[i] / yMax) * graphHeight;
-                GameObject newCircle = CreateCircle(new Vector2(xPosition, yPosition));
+                yPosition = Mathf.Clamp(yPosition, 0, graphHeight);
+            GameObject newCircle = CreateCircle(new Vector2(xPosition, yPosition));
                 if(listOfCircles.Count < maxPoints)
                 {
                     listOfCircles.Add(newCircle);
